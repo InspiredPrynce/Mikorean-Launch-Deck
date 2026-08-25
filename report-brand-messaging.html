@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <style>
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-        :root{--grey-900:#1a1a1a;--grey-800:#2d2d2d;--grey-700:#4a4a4a;--grey-600:#666;--white:#fff;--off-white:#f5f5f5;--black:#000;--dark:#111;--accent:#00D4FF;}
+        :root{--grey-900:#1a1a1a;--grey-800:#2d2d2d;--grey-700:#4a4a4a;--grey-600:#666;--white:#fff;--off-white:#f5f5f5;--black:#000;--dark:#111;--accent:#00D4FF;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--orange:#f97316;}
         html{scroll-behavior:smooth;}body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--white);-webkit-font-smoothing:antialiased;line-height:1.6;}
         .report-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(20px);background:rgba(17,17,17,0.85);border-bottom:1px solid rgba(255,255,255,0.05);}
         .back-link{display:flex;align-items:center;gap:0.5rem;color:var(--grey-600);text-decoration:none;font-size:0.85rem;transition:color 0.3s;}.back-link:hover{color:var(--accent);}.back-link svg{width:16px;height:16px;}
@@ -19,6 +19,7 @@
         .report-hero{min-height:60vh;display:flex;flex-direction:column;justify-content:center;padding:8rem 2rem 4rem;max-width:900px;margin:0 auto;}
         .report-label{font-size:0.75rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;}
         .report-hero h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1.5rem;}
+        .report-hero .subtitle{font-size:1.1rem;color:var(--grey-600);margin-bottom:1.5rem;max-width:600px;}
         .report-meta{display:flex;gap:2rem;color:var(--grey-600);font-size:0.85rem;flex-wrap:wrap;}.report-meta strong{color:var(--white);font-weight:600;}
         .report-content{max-width:900px;margin:0 auto;padding:0 2rem 6rem;}
         .toc{background:rgba(45,45,45,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:2rem;margin-bottom:4rem;}
@@ -38,16 +39,57 @@
         .styled-list{list-style:none;margin:1.5rem 0;}.styled-list li{padding:0.75rem 0;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--grey-600);display:flex;gap:0.75rem;align-items:flex-start;}
         .styled-list li::before{content:'→';color:var(--accent);font-weight:600;flex-shrink:0;}
         .bar-chart{margin:2rem 0;}.bar-row{display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem;}
-        .bar-label{min-width:120px;font-size:0.8rem;color:var(--grey-600);text-align:right;}
+        .bar-label{min-width:140px;font-size:0.8rem;color:var(--grey-600);text-align:right;}
         .bar-track{flex:1;height:28px;background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden;}
         .bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 0.75rem;font-size:0.75rem;font-weight:600;color:var(--dark);transition:width 1.5s cubic-bezier(0.16,1,0.3,1);}
         .bar-fill.blue{background:linear-gradient(90deg,var(--accent),#00a8cc);}.bar-fill.grey{background:linear-gradient(90deg,var(--grey-700),var(--grey-600));}
-        .bar-fill.green{background:linear-gradient(90deg,#22c55e,#16a34a);}
+        .bar-fill.green{background:linear-gradient(90deg,var(--green),#16a34a);}.bar-fill.red{background:linear-gradient(90deg,var(--red),#dc2626);}
+        .bar-fill.yellow{background:linear-gradient(90deg,var(--yellow),#ca8a04);}.bar-fill.orange{background:linear-gradient(90deg,var(--orange),#ea580c);}
         .tagline-card{background:rgba(45,45,45,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.5rem;margin-bottom:1rem;transition:border-color 0.3s;}
         .tagline-card:hover{border-color:rgba(0,212,255,0.2);}
+        .tagline-card.recommended{border-color:rgba(0,212,255,0.3);background:rgba(0,212,255,0.05);}
         .tagline-label{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem;font-weight:600;}
         .tagline-text{font-size:1.3rem;font-weight:700;margin-bottom:0.5rem;}
         .tagline-desc{color:var(--grey-600);font-size:0.9rem;}
+        .swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.05);border-radius:16px;overflow:hidden;margin:2rem 0;}
+        .swot-card{padding:1.5rem;background:var(--dark);}
+        .swot-card h4{font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1rem;font-weight:700;}
+        .swot-card.strengths h4{color:var(--green);}.swot-card.weaknesses h4{color:var(--red);}
+        .swot-card.opportunities h4{color:var(--accent);}.swot-card.threats h4{color:var(--orange);}
+        .swot-card ul{list-style:none;}.swot-card ul li{padding:0.4rem 0;font-size:0.85rem;color:var(--grey-600);border-bottom:1px solid rgba(255,255,255,0.03);}
+        .swot-card ul li:last-child{border-bottom:none;}
+        .swot-card ul li::before{content:'•';color:var(--accent);margin-right:0.5rem;font-weight:600;}
+        .avoid-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:2rem 0;}
+        .avoid-card{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:12px;padding:1.25rem;}
+        .avoid-card h4{color:var(--red);font-size:0.9rem;margin-bottom:0.5rem;}
+        .avoid-card p{color:var(--grey-600);font-size:0.85rem;margin:0;}
+        .avoid-card .instead{color:var(--green);font-size:0.8rem;margin-top:0.5rem;font-style:italic;}
+        .pillar-card{background:rgba(45,45,45,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;transition:border-color 0.3s;}
+        .pillar-card:hover{border-color:rgba(0,212,255,0.2);}
+        .pillar-num{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;font-weight:600;}
+        .pillar-card h3{font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;}
+        .pillar-card p{color:var(--grey-600);font-size:0.9rem;margin:0;}
+        .pillar-phrases{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem;}
+        .pillar-phrases span{background:rgba(0,212,255,0.1);color:var(--accent);padding:0.3rem 0.75rem;border-radius:20px;font-size:0.75rem;font-weight:500;}
+        .channel-table{width:100%;border-collapse:collapse;margin:2rem 0;}
+        .channel-table th{text-align:left;padding:1rem;border-bottom:2px solid rgba(255,255,255,0.1);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);}
+        .channel-table td{padding:1rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--grey-600);font-size:0.9rem;}
+        .channel-table tr:hover td{color:var(--white);}
+        .ad-card{background:rgba(45,45,45,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.5rem;margin-bottom:1rem;}
+        .ad-card h4{color:var(--accent);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;}
+        .ad-headline{background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);border-radius:8px;padding:0.75rem 1rem;margin-bottom:0.5rem;font-weight:600;font-size:0.95rem;}
+        .ad-desc{color:var(--grey-600);font-size:0.85rem;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.03);}
+        .redline-list{list-style:none;margin:1.5rem 0;}
+        .redline-list li{padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--grey-600);font-size:0.9rem;display:flex;gap:0.75rem;align-items:flex-start;}
+        .redline-list li .never{color:var(--red);font-weight:600;min-width:100px;}
+        .redline-list li .instead{color:var(--green);}
+        .checklist{list-style:none;margin:1.5rem 0;}
+        .checklist li{padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--grey-600);font-size:0.9rem;display:flex;gap:0.75rem;align-items:flex-start;}
+        .checklist li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;}
+        .hashtag-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:2rem 0;}
+        .hashtag-card{background:rgba(45,45,45,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.25rem;text-align:center;}
+        .hashtag-card .tag{font-size:1.1rem;font-weight:700;color:var(--accent);margin-bottom:0.5rem;}
+        .hashtag-card .purpose{font-size:0.8rem;color:var(--grey-600);}
         .report-footer{border-top:1px solid rgba(255,255,255,0.05);padding:3rem 2rem;max-width:900px;margin:0 auto;}
         .footer-nav{display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap;}
         .footer-nav a{color:var(--grey-600);text-decoration:none;font-size:0.85rem;padding:1rem 1.5rem;border:1px solid rgba(255,255,255,0.06);border-radius:12px;transition:all 0.3s;flex:1;min-width:200px;}
@@ -55,7 +97,7 @@
         .footer-nav .label{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:0.25rem;color:var(--grey-700);}
         .footer-nav .title{font-weight:600;color:var(--white);}
         .credit-footer{text-align:center;padding:3rem 2rem;border-top:1px solid rgba(255,255,255,0.03);margin-top:3rem;}.credit-footer p{font-size:0.8rem;color:var(--grey-700);}.credit-footer strong{color:var(--white);}
-        @media(max-width:768px){.toc-list{columns:1;}.report-hero{padding:7rem 1.25rem 3rem;}.report-content{padding:0 1.25rem 4rem;}.report-nav{padding:0.75rem 1.25rem;}}
+        @media(max-width:768px){.toc-list,.swot-grid,.avoid-grid{columns:1;}.report-hero{padding:7rem 1.25rem 3rem;}.report-content{padding:0 1.25rem 4rem;}.report-nav{padding:0.75rem 1.25rem;}.channel-table{font-size:0.8rem;}.channel-table th,.channel-table td{padding:0.5rem;}}
         @media print{.report-nav{display:none;}body{background:white;color:black;}}
     </style>
 </head>
@@ -65,102 +107,732 @@
         <div class="nav-logo">MIKO<span>REAN</span></div>
     </nav>
     <section class="report-hero">
-        <div class="report-label">Report 19 of 20</div>
+        <div class="report-label">Report 19 of 23</div>
         <h1>Brand Messaging Framework</h1>
+        <p class="subtitle">Durability. Resilience. Premium Quality. Unbeatable Value. — The complete voice system for Mikorean Nigeria.</p>
         <div class="report-meta"><span>Prepared by <strong>Henry Ofido</strong></span><span>Brand and Marketing Strategist</span><span>August 2026</span></div>
     </section>
     <div class="report-content">
         <div class="toc">
             <h3>Table of Contents</h3>
             <ul class="toc-list">
-                <li><a href="#s1"><span class="toc-num">01</span> Tagline Options</a></li>
-                <li><a href="#s2"><span class="toc-num">02</span> Brand Voice Guide</a></li>
-                <li><a href="#s3"><span class="toc-num">03</span> Content Pillars</a></li>
-                <li><a href="#s4"><span class="toc-num">04</span> Messaging Hierarchy</a></li>
-                <li><a href="#s5"><span class="toc-num">05</span> Tone of Voice</a></li>
+                <li><a href="#s1"><span class="toc-num">01</span> Brand Positioning</a></li>
+                <li><a href="#s2"><span class="toc-num">02</span> Core Voice Identity</a></li>
+                <li><a href="#s3"><span class="toc-num">03</span> Seven Voice Pillars + SWOT</a></li>
+                <li><a href="#s4"><span class="toc-num">04</span> Tagline Options</a></li>
+                <li><a href="#s5"><span class="toc-num">05</span> Messaging Hierarchy</a></li>
+                <li><a href="#s6"><span class="toc-num">06</span> Tones to Avoid</a></li>
+                <li><a href="#s7"><span class="toc-num">07</span> Channel Voice Guide</a></li>
+                <li><a href="#s8"><span class="toc-num">08</span> Ad Creative Framework</a></li>
+                <li><a href="#s9"><span class="toc-num">09</span> Content Pillars</a></li>
+                <li><a href="#s10"><span class="toc-num">10</span> Hashtag Strategy</a></li>
+                <li><a href="#s11"><span class="toc-num">11</span> Implementation Checklist</a></li>
             </ul>
         </div>
         <div class="metrics-grid">
+            <div class="metric-card"><div class="metric-value">7</div><div class="metric-label">Voice Pillars</div></div>
+            <div class="metric-card"><div class="metric-value">7</div><div class="metric-label">SWOT Analyses</div></div>
+            <div class="metric-card"><div class="metric-value">15</div><div class="metric-label">Tones to Avoid</div></div>
             <div class="metric-card"><div class="metric-value">10</div><div class="metric-label">Tagline Options</div></div>
-            <div class="metric-card"><div class="metric-value">5</div><div class="metric-label">Content Pillars</div></div>
-            <div class="metric-card"><div class="metric-value">4</div><div class="metric-label">Tone Variations</div></div>
-            <div class="metric-card"><div class="metric-value">3</div><div class="metric-label">Messaging Layers</div></div>
         </div>
 
+        <!-- SECTION 01: BRAND POSITIONING -->
         <section class="content-section" id="s1">
-            <h2><span>01</span> Tagline Options</h2>
-            <p>10 tagline options tested for resonance with Nigerian tech consumers.</p>
+            <h2><span>01</span> Brand Positioning Statement</h2>
+            <div class="callout">
+                <div class="callout-title">Core Positioning</div>
+                <p>"For Nigerian tech consumers who demand quality without compromise, Mikorean is the Chinese-inspired tech accessories brand that delivers premium, durable products at prices everyone can afford."</p>
+            </div>
+            <p>Unlike Oraimo and other competitors who charge premium prices for "good enough" quality, Mikorean engineers products that survive Nigerian conditions — from Lagos traffic heat to PH humidity to Abuja dust — while keeping prices accessible to every Nigerian, from campus students to working professionals.</p>
+        </section>
 
-            <div class="tagline-card">
-                <div class="tagline-label">Recommended</div>
-                <div class="tagline-text">Tech Accessories. Engineered for Nigeria.</div>
-                <div class="tagline-desc">Clear, specific, and locally relevant. Communicates both product category and market focus.</div>
+        <!-- SECTION 02: CORE VOICE IDENTITY -->
+        <section class="content-section" id="s2">
+            <h2><span>02</span> Core Voice Identity: "The Resilient One"</h2>
+            <p>Mikorean's brand voice is <strong>The Resilient One</strong> — a voice that mirrors the Nigerian spirit of never breaking, never bending, always enduring. This is not just a marketing angle; it is a cultural alignment with how Nigerians see themselves.</p>
+            <div class="bar-chart">
+                <h3>Voice Attribute Ratings</h3>
+                <div class="bar-row"><span class="bar-label">Durable/Resilient</span><div class="bar-track"><div class="bar-fill blue" data-width="95">95%</div></div></div>
+                <div class="bar-row"><span class="bar-label">Confident</span><div class="bar-track"><div class="bar-fill blue" data-width="90">90%</div></div></div>
+                <div class="bar-row"><span class="bar-label">Proudly Nigerian</span><div class="bar-track"><div class="bar-fill green" data-width="88">88%</div></div></div>
+                <div class="bar-row"><span class="bar-label">Accessible</span><div class="bar-track"><div class="bar-fill blue" data-width="85">85%</div></div></div>
+                <div class="bar-row"><span class="bar-label">Honest/Direct</span><div class="bar-track"><div class="bar-fill green" data-width="82">82%</div></div></div>
+                <div class="bar-row"><span class="bar-label">Affordable-Forward</span><div class="bar-track"><div class="bar-fill blue" data-width="80">80%</div></div></div>
+                <div class="bar-row"><span class="bar-label">Technical</span><div class="bar-track"><div class="bar-fill grey" data-width="70">70%</div></div></div>
+                <div class="bar-row"><span class="bar-label">Warm/Approachable</span><div class="bar-track"><div class="bar-fill grey" data-width="65">65%</div></div></div>
+                <div class="bar-row"><span class="bar-label">Playful</span><div class="bar-track"><div class="bar-fill grey" data-width="50">50%</div></div></div>
+            </div>
+        </section>
+
+        <!-- SECTION 03: SEVEN VOICE PILLARS + SWOT -->
+        <section class="content-section" id="s3">
+            <h2><span>03</span> Seven Voice Pillars + SWOT Analysis</h2>
+
+            <!-- PILLAR 1 -->
+            <div class="pillar-card">
+                <div class="pillar-num">Pillar 01</div>
+                <h3>Durability Is Non-Negotiable</h3>
+                <p><strong>The Nigerian Resilience Connection</strong> — Nigerians don't buy things to replace them next month. They buy things to last. From Danfo buses running since 1985 to market women using the same scale for decades — durability is in Nigerian DNA.</p>
+                <div class="pillar-phrases">
+                    <span>"Built to last"</span>
+                    <span>"Nigerian-proof"</span>
+                    <span>"Survives everything"</span>
+                    <span>"Tested for Nigerian life"</span>
+                    <span>"Engineered to endure"</span>
+                </div>
+            </div>
+            <div class="swot-grid">
+                <div class="swot-card strengths"><h4>Strengths</h4><ul>
+                    <li>Directly aligns with Nigerian cultural values of resilience</li>
+                    <li>Creates strong emotional connection with target audience</li>
+                    <li>Differentiates from competitors who focus on features/price alone</li>
+                    <li>Supports premium positioning without high pricing</li>
+                    <li>Easy to measure and validate (bend tests, warranties)</li>
+                </ul></div>
+                <div class="swot-card weaknesses"><h4>Weaknesses</h4><ul>
+                    <li>May come across as repetitive if overused across all content</li>
+                    <li>Requires consistent product quality — any failure damages credibility</li>
+                    <li>Durability claims need verifiable proof to be believable</li>
+                    <li>May limit creative variety if every post is about durability</li>
+                    <li>Competitors can copy durability messaging if they improve quality</li>
+                </ul></div>
+                <div class="swot-card opportunities"><h4>Opportunities</h4><ul>
+                    <li>User-generated durability content (#MikoreanSurvives challenge)</li>
+                    <li>Partnership with influencers for "torture test" content</li>
+                    <li>Durability-focused PR (news coverage of testing facility)</li>
+                    <li>Corporate/institutional sales where durability = cost savings</li>
+                    <li>Campus market where students need products lasting 4+ years</li>
+                </ul></div>
+                <div class="swot-card threats"><h4>Threats</h4><ul>
+                    <li>Competitors may launch their own durability campaigns</li>
+                    <li>Single product failure viral on social media destroys narrative</li>
+                    <li>Market shift toward disposable/upgrade culture</li>
+                    <li>Counterfeit products with poor quality undermine brand trust</li>
+                    <li>Economic pressure could force cost-cutting that compromises durability</li>
+                </ul></div>
+            </div>
+
+            <!-- PILLAR 2 -->
+            <div class="pillar-card">
+                <div class="pillar-num">Pillar 02</div>
+                <h3>Premium Quality, No Apology</h3>
+                <p><strong>The "You Deserve Better" Connection</strong> — Nigerians have been conditioned to accept "good enough" because premium options are priced out of reach. Mikorean flips this: Premium is not a luxury — it's a right.</p>
+                <div class="pillar-phrases">
+                    <span>"Premium for everyone"</span>
+                    <span>"Quality without compromise"</span>
+                    <span>"World-class, wallet-friendly"</span>
+                    <span>"You deserve premium"</span>
+                    <span>"Flagship quality, everyday price"</span>
+                </div>
+            </div>
+            <div class="swot-grid">
+                <div class="swot-card strengths"><h4>Strengths</h4><ul>
+                    <li>Challenges the assumption that "affordable = low quality"</li>
+                    <li>Justifies higher margins than pure budget competitors</li>
+                    <li>Creates aspirational brand image while remaining accessible</li>
+                    <li>Appeals to status-conscious Nigerian consumers</li>
+                    <li>Supports bundle/upsell strategies</li>
+                </ul></div>
+                <div class="swot-card weaknesses"><h4>Weaknesses</h4><ul>
+                    <li>"Premium" is subjective — what feels premium varies per customer</li>
+                    <li>Requires consistent quality across all 12 SKUs</li>
+                    <li>May confuse if premium messaging clashes with discount campaigns</li>
+                    <li>Established brands may have stronger "premium" credibility</li>
+                    <li>Overusing "premium" without proof becomes empty speak</li>
+                </ul></div>
+                <div class="swot-card opportunities"><h4>Opportunities</h4><ul>
+                    <li>"Premium for everyone" is highly shareable, viral-ready</li>
+                    <li>Premium packaging and unboxing content drives engagement</li>
+                    <li>Corporate gifting market values premium presentation</li>
+                    <li>Premium positioning enables future product line extensions</li>
+                    <li>Influencer partnerships with "aspirational but relatable" creators</li>
+                </ul></div>
+                <div class="swot-card threats"><h4>Threats</h4><ul>
+                    <li>Established brands have deeper premium perception</li>
+                    <li>Premium-priced competitor entering budget space erodes differentiation</li>
+                    <li>Customer reviews highlighting quality issues contradict premium claims</li>
+                    <li>Economic downturn may make "premium" feel tone-deaf</li>
+                    <li>Counterfeit products with "premium" labeling confuse the market</li>
+                </ul></div>
+            </div>
+
+            <!-- PILLAR 3 -->
+            <div class="pillar-card">
+                <div class="pillar-num">Pillar 03</div>
+                <h3>Affordability Is Freedom</h3>
+                <p><strong>The "No One Left Behind" Connection</strong> — Affordability is not about being cheap — it's about removing barriers. Every Nigerian deserves access to quality tech accessories, regardless of income level.</p>
+                <div class="pillar-phrases">
+                    <span>"Affordable for everyone"</span>
+                    <span>"Quality at Nigerian prices"</span>
+                    <span>"No broke shaming, just smart buying"</span>
+                    <span>"Your budget is respected here"</span>
+                    <span>"Buy once, smile forever"</span>
+                </div>
+            </div>
+            <div class="swot-grid">
+                <div class="swot-card strengths"><h4>Strengths</h4><ul>
+                    <li>Directly addresses the #1 purchase driver in Nigeria (price)</li>
+                    <li>Removes barriers to trial — low risk for first-time buyers</li>
+                    <li>Enables mass market penetration across income levels</li>
+                    <li>Creates natural competitive advantage vs higher-priced alternatives</li>
+                    <li>Supports referral program (affordable = easy recommendations)</li>
+                </ul></div>
+                <div class="swot-card weaknesses"><h4>Weaknesses</h4><ul>
+                    <li>"Affordable" can be confused with "cheap" if not carefully framed</li>
+                    <li>Low prices may attract price-sensitive customers with low loyalty</li>
+                    <li>Constant affordability messaging may erode premium perception</li>
+                    <li>Thin margins on affordable products limit marketing budget</li>
+                    <li>Affordability claims are easily matched by competitors</li>
+                </ul></div>
+                <div class="swot-card opportunities"><h4>Opportunities</h4><ul>
+                    <li>"Cost per use" messaging makes affordability feel smart, not cheap</li>
+                    <li>Student/NYSC discount programs create long-term loyalty</li>
+                    <li>Bundle deals increase AOV while maintaining affordability</li>
+                    <li>Payment plan partnerships make products even more accessible</li>
+                    <li>Campus/reseller networks benefit from accessible price points</li>
+                </ul></div>
+                <div class="swot-card threats"><h4>Threats</h4><ul>
+                    <li>Competitors with Chinese manufacturing can undercut on price</li>
+                    <li>Currency devaluation could force price increases</li>
+                    <li>"Affordable premium" is a crowded space</li>
+                    <li>Customer service costs on low-margin products can become unsustainable</li>
+                    <li>If durability claims fail, "affordable" becomes "cheap and breaks easily"</li>
+                </ul></div>
+            </div>
+
+            <!-- PILLAR 4 -->
+            <div class="pillar-card">
+                <div class="pillar-num">Pillar 04</div>
+                <h3>Nigerian Hustle Culture</h3>
+                <p><strong>The "We Understand Your Grind" Connection</strong> — Mikorean speaks to the hustler — the NYSC corps member, the market trader, the tech bro, the Uber driver, the student. We understand that every naira matters.</p>
+                <div class="pillar-phrases">
+                    <span>"Built for the hustle"</span>
+                    <span>"Works as hard as you do"</span>
+                    <span>"Your hustle is premium"</span>
+                </div>
+            </div>
+            <div class="swot-grid">
+                <div class="swot-card strengths"><h4>Strengths</h4><ul>
+                    <li>Deeply resonates with Nigeria's largest consumer segment</li>
+                    <li>Creates authentic, uniquely Nigerian brand personality</li>
+                    <li>Enables hyper-local content (area names, street references)</li>
+                    <li>Aligns perfectly with affordability and durability pillars</li>
+                    <li>Drives community engagement and user-generated content</li>
+                </ul></div>
+                <div class="swot-card weaknesses"><h4>Weaknesses</h4><ul>
+                    <li>"Hustle culture" glorification may alienate conservative audiences</li>
+                    <li>Over-reliance may limit appeal to upper-income demographics</li>
+                    <li>Requires deep understanding of Nigerian subcultures</li>
+                    <li>Competitors can easily copy Nigerian cultural references</li>
+                    <li>Hustle messaging may feel tone-deaf during economic hardship</li>
+                </ul></div>
+                <div class="swot-card opportunities"><h4>Opportunities</h4><ul>
+                    <li>NYSC campus ambassador program is a natural fit</li>
+                    <li>Partnership with tech hubs, co-working spaces, startup ecosystems</li>
+                    <li>Street market activations and trader partnerships</li>
+                    <li>Content series featuring real Nigerian hustlers</li>
+                    <li>"From hustle to success" storytelling creates aspirational content</li>
+                </ul></div>
+                <div class="swot-card threats"><h4>Threats</h4><ul>
+                    <li>Cultural appropriation accusations if non-Nigerian team executes poorly</li>
+                    <li>"Hustle" fatigue — younger Nigerians pushing back against grind culture</li>
+                    <li>If products fail in the hands of "hustlers," word spreads fast</li>
+                    <li>Competitors with larger budgets can outspend on cultural marketing</li>
+                    <li>Economic recession may make "hustle" messaging feel insensitive</li>
+                </ul></div>
+            </div>
+
+            <!-- PILLAR 5 -->
+            <div class="pillar-card">
+                <div class="pillar-num">Pillar 05</div>
+                <h3>Tech Made Simple</h3>
+                <p><strong>The "No Jargon" Connection</strong> — We explain technology in the language of real Nigerians. Not in spec sheets. In life terms.</p>
+                <div class="pillar-phrases">
+                    <span>"10,000mAh = 3 phone charges"</span>
+                    <span>"0 to 50% in 30 mins"</span>
+                    <span>"Connects before you take them out"</span>
+                </div>
+            </div>
+            <div class="swot-grid">
+                <div class="swot-card strengths"><h4>Strengths</h4><ul>
+                    <li>Makes technical products accessible to non-tech-savvy consumers</li>
+                    <li>Builds trust through education — customers feel informed</li>
+                    <li>Differentiates from competitors who rely on spec-heavy marketing</li>
+                    <li>Positions Mikorean as a helpful expert</li>
+                    <li>Supports customer service by reducing "how does this work?" inquiries</li>
+                </ul></div>
+                <div class="swot-card weaknesses"><h4>Weaknesses</h4><ul>
+                    <li>Oversimplifying specs may frustrate tech-savvy customers</li>
+                    <li>Requires constant content creation to explain new products</li>
+                    <li>Risk of inaccuracy when simplifying technical concepts</li>
+                    <li>Competitors with stronger tech credentials may have more authority</li>
+                    <li>Simplified messaging may not work for all product categories</li>
+                </ul></div>
+                <div class="swot-card opportunities"><h4>Opportunities</h4><ul>
+                    <li>"Tech Made Simple" video series can go viral on TikTok/YouTube</li>
+                    <li>Educational content has high save/share rates on social media</li>
+                    <li>FAQ and tutorial content reduces customer service costs</li>
+                    <li>Partnerships with tech education platforms</li>
+                    <li>"Explain it like I'm 5" format is highly engaging on Twitter</li>
+                </ul></div>
+                <div class="swot-card threats"><h4>Threats</h4><ul>
+                    <li>Tech influencers may dismiss simplified messaging as "dumbing down"</li>
+                    <li>Competitors with stronger tech education content may outperform</li>
+                    <li>If simplified explanations are wrong, it damages credibility</li>
+                    <li>Technical jargon is sometimes necessary — balance is challenging</li>
+                    <li>Market sophistication may increase over time</li>
+                </ul></div>
+            </div>
+
+            <!-- PILLAR 6 -->
+            <div class="pillar-card">
+                <div class="pillar-num">Pillar 06</div>
+                <h3>Community and Belonging</h3>
+                <p><strong>The "This Is Our Brand" Connection</strong> — Mikorean is not a foreign brand selling to Nigerians. It's a brand that belongs to Nigerians. The MIKOREAN Squad, campus ambassadors, and referral programs create ownership.</p>
+                <div class="pillar-phrases">
+                    <span>"This is your brand"</span>
+                    <span>"Nigerian tech pride"</span>
+                    <span>"We're building a movement"</span>
+                </div>
+            </div>
+            <div class="swot-grid">
+                <div class="swot-card strengths"><h4>Strengths</h4><ul>
+                    <li>Creates emotional ownership — customers become brand advocates</li>
+                    <li>MIKOREAN Squad provides scalable, low-cost distribution</li>
+                    <li>User-generated content reduces content creation costs</li>
+                    <li>Community loyalty reduces price sensitivity</li>
+                    <li>Enables grassroots marketing through word-of-mouth</li>
+                </ul></div>
+                <div class="swot-card weaknesses"><h4>Weaknesses</h4><ul>
+                    <li>Requires genuine community investment (events, ambassadors)</li>
+                    <li>Community management is time-intensive</li>
+                    <li>Negative experiences spread faster in tight-knit groups</li>
+                    <li>"Community" can feel performative if not backed by real actions</li>
+                    <li>Competitors can launch similar programs with bigger budgets</li>
+                </ul></div>
+                <div class="swot-card opportunities"><h4>Opportunities</h4><ul>
+                    <li>Campus ambassador programs create organic brand awareness</li>
+                    <li>WhatsApp community groups enable direct relationships</li>
+                    <li>Customer co-creation builds loyalty</li>
+                    <li>Community events create shareable moments</li>
+                    <li>Referral program thrives in community-driven environments</li>
+                </ul></div>
+                <div class="swot-card threats"><h4>Threats</h4><ul>
+                    <li>Community members may demand free products or excessive discounts</li>
+                    <li>Brand community can turn against the company if expectations aren't met</li>
+                    <li>Competitors may poach most active community members</li>
+                    <li>Online community management requires 24/7 moderation</li>
+                    <li>If product fails, community backlash is more damaging</li>
+                </ul></div>
+            </div>
+
+            <!-- PILLAR 7 -->
+            <div class="pillar-card">
+                <div class="pillar-num">Pillar 07</div>
+                <h3>Trust Through Transparency</h3>
+                <p><strong>The "No Wahala" Connection</strong> — In a market flooded with fake products and empty warranties, Mikorean leads with honesty.</p>
+                <div class="pillar-phrases">
+                    <span>"12-month warranty. No excuses."</span>
+                    <span>"If it breaks, we replace it"</span>
+                    <span>"No hidden fees. No fine print."</span>
+                </div>
+            </div>
+            <div class="swot-grid">
+                <div class="swot-card strengths"><h4>Strengths</h4><ul>
+                    <li>Builds long-term brand trust in a market flooded with fakes</li>
+                    <li>Transparent pricing reduces purchase friction</li>
+                    <li>Clear return/warranty policies differentiate from competitors</li>
+                    <li>Honest product descriptions reduce returns</li>
+                    <li>Creates a "safe" brand image</li>
+                </ul></div>
+                <div class="swot-card weaknesses"><h4>Weaknesses</h4><ul>
+                    <li>Warranty claims cost money — generous warranties reduce margins</li>
+                    <li>Transparency about Chinese sourcing may trigger stigma</li>
+                    <li>Being too transparent may reveal thin margins to competitors</li>
+                    <li>If promises aren't kept, backlash is severe</li>
+                    <li>Competitors can match transparency claims without delivering</li>
+                </ul></div>
+                <div class="swot-card opportunities"><h4>Opportunities</h4><ul>
+                    <li>"No Wahala Guarantee" becomes a trademarked trust signal</li>
+                    <li>Transparent comparison content builds credibility</li>
+                    <li>Behind-the-scenes content showing quality testing</li>
+                    <li>Customer review moderation (publishing both good and bad)</li>
+                    <li>Trust-focused PR (media coverage of warranty claims honored)</li>
+                </ul></div>
+                <div class="swot-card threats"><h4>Threats</h4><ul>
+                    <li>Competitors may offer longer warranties or more generous policies</li>
+                    <li>Fraudulent warranty claims can become costly</li>
+                    <li>Social media amplifies any breach of trust</li>
+                    <li>Economic pressure may force warranty policy changes</li>
+                    <li>If product quality declines, transparency becomes a liability</li>
+                </ul></div>
+            </div>
+        </section>
+
+        <!-- SECTION 04: TAGLINE OPTIONS -->
+        <section class="content-section" id="s4">
+            <h2><span>04</span> Tagline Options</h2>
+            <p>10 tagline options centered on durability, premium quality, and affordability.</p>
+
+            <div class="tagline-card recommended">
+                <div class="tagline-label">★ Recommended</div>
+                <div class="tagline-text">Built Different. Priced Right.</div>
+                <div class="tagline-desc">Balances durability ("Built Different" = tougher, more resilient) and affordability ("Priced Right" = accessible). Short, memorable, works across all channels.</div>
             </div>
             <div class="tagline-card">
                 <div class="tagline-label">Option 02</div>
-                <div class="tagline-text">Premium Tech. Nigerian Price.</div>
-                <div class="tagline-desc">Direct value proposition. Speaks to quality-at-affordability positioning.</div>
+                <div class="tagline-text">Tech That Lasts. Prices That Don't Hurt.</div>
+                <div class="tagline-desc">Direct durability + price messaging. Practical and relatable.</div>
             </div>
             <div class="tagline-card">
                 <div class="tagline-label">Option 03</div>
-                <div class="tagline-text">Built Different. Priced Right.</div>
-                <div class="tagline-desc">Confident and punchy. Appeals to quality-conscious value seekers.</div>
+                <div class="tagline-text">Nigerian-Proof. Premium Quality. Everyone's Price.</div>
+                <div class="tagline-desc">Three-pillar messaging in one line. Culturally specific.</div>
             </div>
             <div class="tagline-card">
                 <div class="tagline-label">Option 04</div>
-                <div class="tagline-text">Your Tech. Upgraded.</div>
-                <div class="tagline-desc">Simple and aspirational. Focuses on the transformation Mikorean enables.</div>
+                <div class="tagline-text">Premium for Everyone.</div>
+                <div class="tagline-desc">Simple, aspirational, inclusive. Maximum shareability.</div>
+            </div>
+            <div class="tagline-card">
+                <div class="tagline-label">Option 05</div>
+                <div class="tagline-text">Durable by Design. Affordable by Choice.</div>
+                <div class="tagline-desc">Communicates intention behind both durability and pricing.</div>
+            </div>
+            <div class="tagline-card">
+                <div class="tagline-label">Option 06</div>
+                <div class="tagline-text">Built for the Hustle.</div>
+                <div class="tagline-desc">Connects to Nigerian grind culture + durability.</div>
+            </div>
+            <div class="tagline-card">
+                <div class="tagline-label">Option 07</div>
+                <div class="tagline-text">Premium Tech. Nigerian Resilience.</div>
+                <div class="tagline-desc">Merges quality + cultural identity.</div>
+            </div>
+            <div class="tagline-card">
+                <div class="tagline-label">Option 08</div>
+                <div class="tagline-text">Never Gives Up. Neither Will Your Device.</div>
+                <div class="tagline-desc">Personifies durability through the Nigerian spirit.</div>
+            </div>
+            <div class="tagline-card">
+                <div class="tagline-label">Option 09</div>
+                <div class="tagline-text">Quality That Survives. Price That Makes Sense.</div>
+                <div class="tagline-desc">Practical, direct, no-nonsense.</div>
+            </div>
+            <div class="tagline-card">
+                <div class="tagline-label">Option 10</div>
+                <div class="tagline-text">Tech Accessories Engineered for Nigeria.</div>
+                <div class="tagline-desc">Geographically specific, implies local durability testing.</div>
             </div>
         </section>
 
-        <section class="content-section" id="s2">
-            <h2><span>02</span> Brand Voice Guide</h2>
-            <div class="bar-chart">
-                <h3>Voice Attributes</h3>
-                <div class="bar-row"><span class="bar-label">Confident</span><div class="bar-track"><div class="bar-fill blue" data-width="90">90%</div></div></div>
-                <div class="bar-row"><span class="bar-label">Accessible</span><div class="bar-track"><div class="bar-fill blue" data-width="85">85%</div></div></div>
-                <div class="bar-row"><span class="bar-label">Nigerian</span><div class="bar-track"><div class="bar-fill green" data-width="80">80%</div></div></div>
-                <div class="bar-row"><span class="bar-label">Technical</span><div class="bar-track"><div class="bar-fill grey" data-width="70">70%</div></div></div>
-                <div class="bar-row"><span class="bar-label">Playful</span><div class="bar-track"><div class="bar-fill grey" data-width="50">50%</div></div></div>
-            </div>
-            <ul class="styled-list">
-                <li><strong>Confident:</strong> "We know our products are excellent. No hedging, no apology."</li>
-                <li><strong>Accessible:</strong> "Technical specs explained in plain language anyone can understand."</li>
-                <li><strong>Nigerian:</strong> "We speak the language of our customers — literally and culturally."</li>
-                <li><strong>Technical:</strong> "We know our specs and we're proud of them."</li>
-            </ul>
-        </section>
-
-        <section class="content-section" id="s3">
-            <h2><span>03</span> Content Pillars</h2>
-            <ul class="styled-list">
-                <li><strong>Product Excellence:</strong> Features, specs, comparisons, demonstrations</li>
-                <li><strong>Nigerian Lifestyle:</strong> How products fit into Nigerian daily life</li>
-                <li><strong>Community & Culture:</strong> User stories, team culture, brand personality</li>
-                <li><strong>Tech Education:</strong> Tips, tutorials, industry insights</li>
-                <li><strong>Social Proof:</strong> Reviews, testimonials, user-generated content</li>
-            </ul>
-        </section>
-
-        <section class="content-section" id="s4">
-            <h2><span>04</span> Messaging Hierarchy</h2>
-            <p>Three-layer messaging framework for consistent communication across channels.</p>
-            <ul class="styled-list">
-                <li><strong>Layer 1 — Brand Promise:</strong> "Premium tech accessories designed for Nigerian life"</li>
-                <li><strong>Layer 2 — Value Proposition:</strong> "World-class quality at prices that make sense"</li>
-                <li><strong>Layer 3 — Proof Points:</strong> Specific features, warranties, customer reviews</li>
-            </ul>
-        </section>
-
+        <!-- SECTION 05: MESSAGING HIERARCHY -->
         <section class="content-section" id="s5">
-            <h2><span>05</span> Tone of Voice</h2>
-            <p>Tone varies by context while maintaining consistent brand personality.</p>
-            <div class="metrics-grid">
-                <div class="metric-card"><div class="metric-value">Social</div><div class="metric-label">Playful & Engaging</div></div>
-                <div class="metric-card"><div class="metric-value">Website</div><div class="metric-label">Confident & Informative</div></div>
-                <div class="metric-card"><div class="metric-value">Support</div><div class="metric-label">Empathetic & Helpful</div></div>
-                <div class="metric-card"><div class="metric-value">Sales</div><div class="metric-label">Professional & Persuasive</div></div>
+            <h2><span>05</span> Messaging Hierarchy</h2>
+            <p>Three-layer messaging framework for consistent communication across all channels.</p>
+            <div class="callout">
+                <div class="callout-title">Layer 1 — Brand Promise</div>
+                <p>"Mikorean — Premium Tech Accessories. Built for Nigeria. Priced for Everyone."</p>
             </div>
+            <ul class="styled-list">
+                <li><strong>Layer 2 — Durability:</strong> "Built to survive Nigerian life" — 10,000+ bend tests, heat/humidity/dust resistance, 12-month warranty</li>
+                <li><strong>Layer 2 — Premium Quality:</strong> "World-class quality you can feel" — Chinese-engineered components, strict QC, flagship-grade materials</li>
+                <li><strong>Layer 2 — Affordable Pricing:</strong> "Premium for every Nigerian" — 30-50% below Oraimo, bundle savings, student discounts</li>
+                <li><strong>Layer 3 — Proof Points:</strong> Specific features, warranties, customer reviews, durability test results</li>
+            </ul>
+        </section>
+
+        <!-- SECTION 06: TONES TO AVOID -->
+        <section class="content-section" id="s6">
+            <h2><span>06</span> Brand Tones to AVOID</h2>
+            <p>These tones undermine Mikorean's positioning and must never be used in any brand communication.</p>
+
+            <div class="avoid-grid">
+                <div class="avoid-card">
+                    <h4>Arrogant/Pretentious</h4>
+                    <p>Alienates the mass market. Nigerians reject brands that act superior.</p>
+                    <div class="instead">✓ Instead: "Premium for everyone" not "Only the elite deserve premium"</div>
+                </div>
+                <div class="avoid-card">
+                    <h4>Cheap/Discount-Heavy</h4>
+                    <p>Undermines premium positioning. Constant sales train customers to wait for deals.</p>
+                    <div class="instead">✓ Instead: "Quality cables at Nigerian prices" not "CHEAPEST cables!!!"</div>
+                </div>
+                <div class="avoid-card">
+                    <h4>Overly Corporate/Stiff</h4>
+                    <p>Feels foreign, disconnected, un-Nigerian.</p>
+                    <div class="instead">✓ Instead: "Our cables survive 10,000 bends" not "We deliver superior product experiences"</div>
+                </div>
+                <div class="avoid-card">
+                    <h4>Desperate/Salesy</h4>
+                    <p>Constant "BUY NOW" messaging erodes trust.</p>
+                    <div class="instead">✓ Instead: "Quality speaks for itself" not "BUY NOW!!! 50% OFF!!!"</div>
+                </div>
+                <div class="avoid-card">
+                    <h4>Condescending</h4>
+                    <p>Never talk down to customers or imply they can't afford premium.</p>
+                    <div class="instead">✓ Instead: "Premium quality at accessible prices" not "Finally, premium for people who can't afford real brands"</div>
+                </div>
+                <div class="avoid-card">
+                    <h4>Cultural Appropriation</h4>
+                    <p>Don't force Pidgin or Nigerian references where they don't belong.</p>
+                    <div class="instead">✓ Instead: Use Pidgin naturally, only when it fits — never forced</div>
+                </div>
+                <div class="avoid-card">
+                    <h4>Fear-Mongering</h4>
+                    <p>Don't scare customers about competitors' products.</p>
+                    <div class="instead">✓ Instead: "Our cables protect your device" not "Other brands are killing your phone"</div>
+                </div>
+                <div class="avoid-card">
+                    <h4>Over-Promising</h4>
+                    <p>If you can't deliver, don't say it. Trust is everything.</p>
+                    <div class="instead">✓ Instead: "Tested for 10,000+ bends" not "Lasts forever"</div>
+                </div>
+                <div class="avoid-card">
+                    <h4>Copycat/Imitation</h4>
+                    <p>Never position as "the Nigerian Oraimo" or "China's answer to Apple"</p>
+                    <div class="instead">✓ Instead: "Mikorean. Built Different." not "Like Oraimo but cheaper"</div>
+                </div>
+                <div class="avoid-card">
+                    <h4>Negative About Competitors</h4>
+                    <p>Don't attack competitors directly. Let your quality speak.</p>
+                    <div class="instead">✓ Instead: "We believe premium should be affordable" not "Oraimo is overpriced"</div>
+                </div>
+                <div class="avoid-card">
+                    <h4>Exclusive/Elitist</h4>
+                    <p>Every Nigerian should feel welcome, regardless of income level.</p>
+                    <div class="instead">✓ Instead: "For every Nigerian" not "For the discerning few"</div>
+                </div>
+                <div class="avoid-card">
+                    <h4>Uncertain/Hedging</h4>
+                    <p>Never use "maybe," "we think," "hopefully." Be confident.</p>
+                    <div class="instead">✓ Instead: "Our cables are tested. They last." not "We think our cables are pretty good"</div>
+                </div>
+                <div class="avoid-card">
+                    <h4>Overly Technical</h4>
+                    <p>Don't drown customers in specs they don't understand.</p>
+                    <div class="instead">✓ Instead: "Survives 10,000 bends" not "TPE construction with 60/40 copper-tin alloy"</div>
+                </div>
+                <div class="avoid-card">
+                    <h4>Apologetic</h4>
+                    <p>Never apologize for being affordable or Chinese-inspired.</p>
+                    <div class="instead">✓ Instead: "Mikorean. New name. Proven quality." not "We know we're not well-known yet"</div>
+                </div>
+                <div class="avoid-card">
+                    <h4>Generic/Forgettable</h4>
+                    <p>Avoid bland, could-be-any-brand messaging.</p>
+                    <div class="instead">✓ Instead: "Built to survive Nigerian life" not "Quality products at good prices"</div>
+                </div>
+            </div>
+
+            <h3>Red Line Words — Never Use</h3>
+            <ul class="redline-list">
+                <li><span class="never">"Cheap"</span> <span class="instead">→ Use "affordable" or "value"</span></li>
+                <li><span class="never">"Low-cost"</span> <span class="instead">→ Use "accessible" or "priced for everyone"</span></li>
+                <li><span class="never">"Made in China"</span> <span class="instead">→ Use "Chinese-inspired" or "Chinese-engineered"</span></li>
+                <li><span class="never">"Fake" / "knock-off"</span> <span class="instead">→ Use "our own" or "Mikorean original"</span></li>
+                <li><span class="never">"Budget"</span> <span class="instead">→ Use "smart value" or "accessible premium"</span></li>
+                <li><span class="never">"Try"</span> <span class="instead">→ Use "experience" or "discover"</span></li>
+                <li><span class="never">"Maybe" / "Perhaps"</span> <span class="instead">→ Use definitive statements</span></li>
+                <li><span class="never">"We hope"</span> <span class="instead">→ Use "We guarantee" or "We promise"</span></li>
+                <li><span class="never">"Just ₦3,500"</span> <span class="instead">→ Use "₦3,500 for 3 years of use"</span></li>
+                <li><span class="never">"Only ₦3,500"</span> <span class="instead">→ Use "₦3,500 — that's ₦1,167/year"</span></li>
+            </ul>
+        </section>
+
+        <!-- SECTION 07: CHANNEL VOICE GUIDE -->
+        <section class="content-section" id="s7">
+            <h2><span>07</span> Channel Voice Guide</h2>
+            <p>Tone varies by channel while maintaining consistent brand personality.</p>
+
+            <table class="channel-table">
+                <thead>
+                    <tr><th>Channel</th><th>Tone</th><th>Voice Mix</th><th>Example</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Instagram</strong></td>
+                        <td>Visually confident, aspirational yet relatable</td>
+                        <td>40% Durability + 25% Premium + 20% Nigerian Pride + 15% Playful</td>
+                        <td>"10,000 bends. Still going. Just like you after Lagos traffic. 💪"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Twitter/X</strong></td>
+                        <td>Witty, direct, culturally resonant</td>
+                        <td>35% Durability + 30% Playful + 20% Nigerian Pride + 15% Community</td>
+                        <td>"Your ₦2,000 cable is costing you ₦15,000 a year. Math isn't maths-ing. 📊"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TikTok</strong></td>
+                        <td>Raw, real, entertaining, challenge-driven</td>
+                        <td>40% Durability Tests + 25% Playful + 20% Community + 15% Premium</td>
+                        <td>Drop tests, bend tests, "Mikorean vs competitor" comparisons</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LinkedIn</strong></td>
+                        <td>Professional, vision-driven, industry-insightful</td>
+                        <td>40% Premium + 30% Durability + 20% Business + 10% Community</td>
+                        <td>"Why we engineered Mikorean cables to survive 10,000 bends"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>WhatsApp</strong></td>
+                        <td>Personal, urgent, conversational</td>
+                        <td>40% Value + 30% Durability + 20% Community + 10% Promotional</td>
+                        <td>"Your cable broke again? 😅 Switch to Mikorean. ₦3,500 for 3 years."</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Google Ads</strong></td>
+                        <td>Direct, benefit-focused, urgency-driven</td>
+                        <td>Lead with durability + price</td>
+                        <td>"Durable Cables That Last 3 Years | ₦3,500"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FB/IG Ads</strong></td>
+                        <td>Visual storytelling, emotional connection</td>
+                        <td>Lead with durability stories + premium feel</td>
+                        <td>Side-by-side competitor comparison + price reveal</td>
+                    </tr>
+                    <tr>
+                        <td><strong>YouTube Ads</strong></td>
+                        <td>Cinematic, aspirational, story-driven</td>
+                        <td>Durability hook → product demo → price reveal → CTA</td>
+                        <td>"This cable survived 10,000 bends. ₦3,500. Mikorean."</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TikTok Ads</strong></td>
+                        <td>Native, raw, creator-led</td>
+                        <td>Durability test + price drop + brand tag</td>
+                        <td>Creator drops both cables. Picks up Mikorean. "Still working."</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- SECTION 08: AD CREATIVE FRAMEWORK -->
+        <section class="content-section" id="s8">
+            <h2><span>08</span> Ad Creative Framework</h2>
+
+            <div class="ad-card">
+                <h4>Google Ads — RSA Copy</h4>
+                <div class="ad-headline">Headline 1: Durable Cables That Last 3 Years | ₦3,500</div>
+                <div class="ad-headline">Headline 2: Premium Tech Accessories — Built for Nigeria</div>
+                <div class="ad-headline">Headline 3: Mikorean — Affordable Premium Quality</div>
+                <div class="ad-desc">Description 1: Stop buying cheap cables that break in weeks. Mikorean cables survive 10,000+ bends. 12-month warranty. Free delivery in Lagos.</div>
+                <div class="ad-desc">Description 2: Why pay more for less? Mikorean power banks, earbuds & chargers — premium quality at prices every Nigerian can afford. Shop now.</div>
+                <div class="ad-desc">Description 3: Nigerian-proof tech accessories. Tested in Lagos heat, PH humidity, Abuja dust. Premium for everyone. Order now.</div>
+            </div>
+
+            <div class="ad-card">
+                <h4>Facebook/Instagram Ads — 5 Frameworks</h4>
+                <div class="ad-headline">Framework 1: Durability Story</div>
+                <div class="ad-desc">Hook: "This cable has been bent 10,000 times..." → Show real bend test → "Nigerian-proof. Premium quality. ₦3,500." → CTA: "Shop Now — Free Delivery"</div>
+                <div class="ad-headline">Framework 2: Price Comparison</div>
+                <div class="ad-desc">Hook: "Why pay ₦8,000 when ₦3,500 lasts longer?" → Side-by-side with competitor → "Same quality. Half the price." → CTA: "Get Yours Today"</div>
+                <div class="ad-headline">Framework 3: Social Proof</div>
+                <div class="ad-desc">Hook: "1,000+ Lagosians switched this month" → Testimonials + ratings → "Join the movement." → CTA: "Join MIKOREAN Squad"</div>
+                <div class="ad-headline">Framework 4: Nigerian Pride</div>
+                <div class="ad-desc">Hook: "Built for Nigerian hustle" → Product in Nigerian settings → "Premium for everyone." → CTA: "Shop Mikorean"</div>
+                <div class="ad-headline">Framework 5: Urgency/Scarcity</div>
+                <div class="ad-desc">Hook: "₦15,000 power bank — selling fast" → Limited stock notification → "Lagos runs out fast." → CTA: "Order Before Stock Runs Out"</div>
+            </div>
+
+            <div class="ad-card">
+                <h4>YouTube Ads — 30-Second Script</h4>
+                <div class="ad-desc">0-3s: Hook — "This cable survived 10,000 bends. Can your cable say that?"</div>
+                <div class="ad-desc">3-15s: Product demo + durability test visuals</div>
+                <div class="ad-desc">15-25s: Price reveal — "₦3,500. Premium quality. Nigerian-proof."</div>
+                <div class="ad-desc">25-30s: CTA — "Mikorean. Premium Tech. Nigerian Price."</div>
+            </div>
+
+            <div class="ad-card">
+                <h4>TikTok Ads — Creator Script</h4>
+                <div class="ad-desc">Creator holding Mikorean cable + competitor cable → Drops both → Picks up Mikorean: "Still working. The other one? 💀" → Caption: "Mikorean. Built different. Priced right. 🔴"</div>
+            </div>
+        </section>
+
+        <!-- SECTION 09: CONTENT PILLARS -->
+        <section class="content-section" id="s9">
+            <h2><span>09</span> Content Pillars</h2>
+
+            <div class="pillar-card">
+                <div class="pillar-num">Pillar 1 — 40% of content</div>
+                <h3>Durability Stories</h3>
+                <p>Bend tests, drop tests, water tests, heat tests. Customer durability stories. Comparison content. Infographics. #MikoreanSurvives challenge.</p>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-num">Pillar 2 — 25% of content</div>
+                <h3>Premium Quality</h3>
+                <p>Product photography. Spec breakdowns. Unboxing content. Material close-ups. Expert reviews. Quality certifications.</p>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-num">Pillar 3 — 20% of content</div>
+                <h3>Nigerian Life & Culture</h3>
+                <p>"A Day With Mikorean." Nigerian hustle stories. Cultural moments. Campus content. Street photography. Local slang integration.</p>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-num">Pillar 4 — 10% of content</div>
+                <h3>Affordability & Value</h3>
+                <p>Price comparison graphics. "Cost per use" breakdowns. Bundle deals. Student discounts. Smart buying tips.</p>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-num">Pillar 5 — 5% of content</div>
+                <h3>Community & Social Proof</h3>
+                <p>Customer testimonials. User-generated content. MIKOREAN Squad spotlights. Review compilations. Community polls.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 10: HASHTAG STRATEGY -->
+        <section class="content-section" id="s10">
+            <h2><span>10</span> Hashtag Strategy</h2>
+
+            <h3>Primary Brand Hashtags</h3>
+            <div class="hashtag-grid">
+                <div class="hashtag-card"><div class="tag">#Mikorean</div><div class="purpose">Brand name — use on every post</div></div>
+                <div class="hashtag-card"><div class="tag">#BuiltDifferentPricedRight</div><div class="purpose">Tagline — campaign anchor</div></div>
+                <div class="hashtag-card"><div class="tag">#MikoreanSquad</div><div class="purpose">Community — ambassador content</div></div>
+                <div class="hashtag-card"><div class="tag">#NigerianProof</div><div class="purpose">Durability — product testing</div></div>
+            </div>
+
+            <h3>Campaign Hashtags</h3>
+            <div class="hashtag-grid">
+                <div class="hashtag-card"><div class="tag">#MikoreanSurvives</div><div class="purpose">UGC durability test content</div></div>
+                <div class="hashtag-card"><div class="tag">#PremiumForEveryone</div><div class="purpose">Value proposition awareness</div></div>
+                <div class="hashtag-card"><div class="tag">#BuiltForNigeria</div><div class="purpose">Cultural alignment</div></div>
+                <div class="hashtag-card"><div class="tag">#BuyOnceSmileForever</div><div class="purpose">Anti-cheap messaging</div></div>
+                <div class="hashtag-card"><div class="tag">#MikoreanOnCampus</div><div class="purpose">Student market penetration</div></div>
+            </div>
+        </section>
+
+        <!-- SECTION 11: IMPLEMENTATION CHECKLIST -->
+        <section class="content-section" id="s11">
+            <h2><span>11</span> Implementation Checklist</h2>
+
+            <h3>Immediate Actions (Week 1)</h3>
+            <ul class="checklist">
+                <li>Update all social media bios with new tagline: "Built Different. Priced Right."</li>
+                <li>Create brand voice cheat sheet for content team</li>
+                <li>Audit existing content for tone violations</li>
+                <li>Update website copy with durability-first messaging</li>
+                <li>Brief all customer service agents on new voice</li>
+            </ul>
+
+            <h3>Short-Term Actions (Month 1)</h3>
+            <ul class="checklist">
+                <li>Create 10 durability test videos for TikTok/Reels</li>
+                <li>Launch #MikoreanSurvives challenge</li>
+                <li>Update all ad creative with new messaging framework</li>
+                <li>Train MIKOREAN Squad on brand voice</li>
+                <li>Create templates for each content pillar</li>
+            </ul>
+
+            <h3>Ongoing Actions</h3>
+            <ul class="checklist">
+                <li>Monthly brand voice audits across all channels</li>
+                <li>Quarterly messaging refresh based on performance data</li>
+                <li>A/B test tagline options in ads</li>
+                <li>Monitor competitor messaging for differentiation opportunities</li>
+                <li>Collect and amplify customer durability stories</li>
+            </ul>
         </section>
     </div>
 
