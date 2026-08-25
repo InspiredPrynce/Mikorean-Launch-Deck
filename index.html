@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIKOREAN — Tech Accessories. Engineered for Nigeria.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --grey-900: #1a1a1a;
+            --grey-800: #2d2d2d;
+            --grey-700: #4a4a4a;
+            --grey-600: #666666;
+            --white: #ffffff;
+            --off-white: #f5f5f5;
+            --black: #000000;
+            --dark: #111111;
+            --accent: #00D4FF;
+            --accent-glow: rgba(0, 212, 255, 0.3);
+            --accent-dim: rgba(0, 212, 255, 0.1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark);
+            color: var(--white);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* HERO SECTION */
+        #hero-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(to bottom, transparent, var(--dark));
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .hero-logo {
+            font-size: clamp(3.5rem, 10vw, 8rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 0.9;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--white) 0%, var(--grey-600) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-tagline {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            font-weight: 300;
+            color: var(--grey-600);
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(0.85rem, 1.5vw, 1rem);
+            color: var(--grey-700);
+            max-width: 500px;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+
+        .hero-scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--grey-700);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+            animation: scrollDown 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollDown {
+            0% { transform: scaleY(0); transform-origin: top; }
+            50% { transform: scaleY(1); transform-origin: top; }
+            51% { transform: scaleY(1); transform-origin: bottom; }
+            100% { transform: scaleY(0); transform-origin: bottom; }
+        }
+
+        /* NAVIGATION */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(20px);
+            background: rgba(17, 17, 17, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transform: translateY(-100%);
+        }
+
+        .nav.visible { transform: translateY(0); }
+
+        .nav-logo {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .nav-logo span { color: var(--accent); }
+
+        .nav-info {
+            font-size: 0.75rem;
+            color: var(--grey-600);
+            letter-spacing: 0.05em;
+        }
+
+        /* SECTION STYLES */
+        .section {
+            position: relative;
+            z-index: 1;
+            padding: 6rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            font-size: 1rem;
+            color: var(--grey-600);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* STATS BAR */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto 6rem;
+        }
+
+        .stat-item {
+            padding: 2rem;
+            text-align: center;
+            background: var(--dark);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--grey-600);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* REPORT GRID */
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .report-card {
+            position: relative;
+            background: linear-gradient(145deg, rgba(45, 45, 45, 0.5), rgba(26, 26, 26, 0.8));
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 2rem;
+            text-decoration: none;
+            color: var(--white);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .report-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .report-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 212, 255, 0.06), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .report-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 212, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 212, 255, 0.05);
+        }
+
+        .report-card:hover::before { opacity: 1; }
+        .report-card:hover::after { opacity: 1; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.25rem;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .card-number {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--grey-700);
+            letter-spacing: 0.1em;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--grey-600);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .badge-ready {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .badge-new {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .card-arrow {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: var(--grey-700);
+            font-size: 0.9rem;
+        }
+
+        .report-card:hover .card-arrow {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--dark);
+            transform: translateX(4px);
+        }
+
+        /* FOOTER */
+        .footer {
+            position: relative;
+            z-index: 1;
+            padding: 4rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo span { color: var(--accent); }
+
+        .footer-tagline {
+            font-size: 0.9rem;
+            color: var(--grey-600);
+            margin-bottom: 2rem;
+        }
+
+        .footer-divider {
+            width: 60px;
+            height: 1px;
+            background: var(--grey-800);
+            margin: 2rem auto;
+        }
+
+        .footer-credit {
+            font-size: 0.8rem;
+            color: var(--grey-700);
+            line-height: 1.8;
+        }
+
+        .footer-credit strong {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .footer-year {
+            margin-top: 1rem;
+            font-size: 0.7rem;
+            color: var(--grey-800);
+            letter-spacing: 0.1em;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .reports-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .section { padding: 4rem 1.25rem; }
+            .nav { padding: 1rem 1.25rem; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-bar {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* PRINT STYLES */
+        @media print {
+            #hero-canvas, .nav, .hero-scroll-indicator { display: none; }
+            body { background: white; color: black; }
+            .hero { min-height: auto; padding: 2rem; }
+            .hero-logo { -webkit-text-fill-color: #1a1a1a; background: none; }
+            .report-card { break-inside: avoid; border: 1px solid #ddd; }
+            .section { padding: 2rem; }
+        }
+
+        /* LOADING STATE */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--dark);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .loader-text {
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--grey-700);
+        }
+
+        .loader-bar {
+            width: 120px;
+            height: 2px;
+            background: var(--grey-800);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loader-bar::after {
+            content: '';
+            display: block;
+            width: 40%;
+            height: 100%;
+            background: var(--accent);
+            border-radius: 2px;
+            animation: loading 1.2s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(350%); }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOADER -->
+    <div class="page-loader" id="loader">
+        <div class="loader-text">Loading Portfolio</div>
+        <div class="loader-bar"></div>
+    </div>
+
+    <!-- THREE.JS CANVAS -->
+    <canvas id="hero-canvas"></canvas>
+
+    <!-- NAVIGATION -->
+    <nav class="nav" id="nav">
+        <a href="index.html" class="nav-logo">MIKO<span>REAN</span></a>
+        <div class="nav-info">Brand Strategy Portfolio — 20 Reports</div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="hero-badge">Brand Strategy Portfolio</div>
+        <h1 class="hero-logo">MIKOREAN</h1>
+        <p class="hero-tagline">Tech Accessories. Engineered for Nigeria.</p>
+        <p class="hero-subtitle">A comprehensive brand strategy portfolio comprising 20 detailed reports covering marketing, sales, operations, and growth for the Nigerian market.</p>
+        <div class="hero-scroll-indicator">
+            <span>Scroll to explore</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="section" id="stats-section">
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-number">20</div>
+                <div class="stat-label">Strategy Reports</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">84+</div>
+                <div class="stat-label">FAQs & Scripts</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Month Roadmap</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Campaign Architectures</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- REPORTS GRID -->
+    <section class="section" id="reports-section">
+        <div class="section-header">
+            <span class="section-label">Strategy Reports</span>
+            <h2 class="section-title">20 Comprehensive Reports</h2>
+            <p class="section-desc">Each report is a deep-dive into a specific domain, designed to equip Mikorean with actionable strategies for the Nigerian market.</p>
+        </div>
+
+        <div class="reports-grid">
+            <!-- Card 1 -->
+            <a href="report-twitter-playbook.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">🐦</div>
+                    <span class="card-number">01 / 20</span>
+                </div>
+                <h3 class="card-title">Twitter Engagement Playbook</h3>
+                <p class="card-desc">44 ready-to-post tweets, engagement hooks, trend-jacking calendar, and community building tactics for X/Twitter.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 2 -->
+            <a href="report-twitter-intelligence.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">🔍</div>
+                    <span class="card-number">02 / 20</span>
+                </div>
+                <h3 class="card-title">X/Twitter Intelligence Report</h3>
+                <p class="card-desc">Competitor analysis, white-space opportunities, influencer pipeline, and audience insights for X/Twitter.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 3 -->
+            <a href="report-tiktok-strategy.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">🎵</div>
+                    <span class="card-number">03 / 20</span>
+                </div>
+                <h3 class="card-title">TikTok Viral Playbook</h3>
+                <p class="card-desc">Viral challenges, content calendar, TikTok Shop integration, and creator partnership strategies.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 4 -->
+            <a href="report-seo-strategy.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <span class="card-number">04 / 20</span>
+                </div>
+                <h3 class="card-title">SEO Strategy Playbook</h3>
+                <p class="card-desc">12-month roadmap, keyword research, technical SEO, content strategy, and link building for Nigerian search.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 5 -->
+            <a href="report-ad-creative.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">🎨</div>
+                    <span class="card-number">05 / 20</span>
+                </div>
+                <h3 class="card-title">Ad Creative Strategy</h3>
+                <p class="card-desc">4 campaign architectures, RSA copy frameworks, creative briefs, and visual direction guidelines.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 6 -->
+            <a href="report-paid-social.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">💰</div>
+                    <span class="card-number">06 / 20</span>
+                </div>
+                <h3 class="card-title">Paid Social Strategy</h3>
+                <p class="card-desc">6-month roadmap, audience architecture, budget allocation, and performance optimization framework.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 7 -->
+            <a href="report-returns.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">📦</div>
+                    <span class="card-number">07 / 20</span>
+                </div>
+                <h3 class="card-title">Returns & Post-Purchase Framework</h3>
+                <p class="card-desc">Return policy, post-purchase flow, warranty management, and customer retention protocols.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-new">● New</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 8 -->
+            <a href="report-operations.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">⚙️</div>
+                    <span class="card-number">08 / 20</span>
+                </div>
+                <h3 class="card-title">Operations Manual</h3>
+                <p class="card-desc">Team structure, supply chain management, KPIs, and 90-day operational timeline.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 9 -->
+            <a href="report-instagram.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">📸</div>
+                    <span class="card-number">09 / 20</span>
+                </div>
+                <h3 class="card-title">Instagram Playbook</h3>
+                <p class="card-desc">Feed aesthetic guidelines, Reels strategy, Shopping setup, and visual storytelling frameworks.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 10 -->
+            <a href="report-customer-service.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">🎧</div>
+                    <span class="card-number">10 / 20</span>
+                </div>
+                <h3 class="card-title">Customer Service Framework</h3>
+                <p class="card-desc">84+ FAQs, script templates, escalation matrix, and service level agreements.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 11 -->
+            <a href="report-growth.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">🚀</div>
+                    <span class="card-number">11 / 20</span>
+                </div>
+                <h3 class="card-title">Growth Strategy</h3>
+                <p class="card-desc">Acquisition loops, referral engine, growth experiments, and viral coefficient optimization.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 12 -->
+            <a href="report-linkedin.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">💼</div>
+                    <span class="card-number">12 / 20</span>
+                </div>
+                <h3 class="card-title">LinkedIn Playbook</h3>
+                <p class="card-desc">25 post templates, B2B outreach sequences, employee advocacy program, and thought leadership.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 13 -->
+            <a href="report-benchmarks.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">📈</div>
+                    <span class="card-number">13 / 20</span>
+                </div>
+                <h3 class="card-title">Performance Benchmarks</h3>
+                <p class="card-desc">Industry benchmarks, revenue targets, competitive scorecard, and KPI tracking framework.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 14 -->
+            <a href="report-sales-engineering.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">🔧</div>
+                    <span class="card-number">14 / 20</span>
+                </div>
+                <h3 class="card-title">Technical Sales Framework</h3>
+                <p class="card-desc">Product specifications, demo scripts, competitive battlecards, and technical objection handling.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 15 -->
+            <a href="report-sales-outreach.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">📧</div>
+                    <span class="card-number">15 / 20</span>
+                </div>
+                <h3 class="card-title">Sales Outreach Playbook</h3>
+                <p class="card-desc">Email templates, LinkedIn outreach scripts, CRM setup guide, and pipeline management.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 16 -->
+            <a href="report-sales-coaching.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">🎯</div>
+                    <span class="card-number">16 / 20</span>
+                </div>
+                <h3 class="card-title">Sales Coaching Program</h3>
+                <p class="card-desc">4-week training curriculum, objection handling frameworks, and role-play scenarios.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 17 -->
+            <a href="report-sales-data.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">📉</div>
+                    <span class="card-number">17 / 20</span>
+                </div>
+                <h3 class="card-title">Sales Data Framework</h3>
+                <p class="card-desc">14-sheet framework, metric definitions, forecasting model, and dashboard specifications.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 18 -->
+            <a href="report-trends.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">🔮</div>
+                    <span class="card-number">18 / 20</span>
+                </div>
+                <h3 class="card-title">Trend Research Report</h3>
+                <p class="card-desc">Market trends, consumer behavior analysis, opportunity windows, and competitive landscape.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-new">● New</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 19 -->
+            <a href="report-brand-messaging.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">💬</div>
+                    <span class="card-number">19 / 20</span>
+                </div>
+                <h3 class="card-title">Brand Messaging Framework</h3>
+                <p class="card-desc">Tagline options, brand voice guide, content pillars, and messaging hierarchy.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+
+            <!-- Card 20 -->
+            <a href="report-channel-strategy.html" class="report-card">
+                <div class="card-header">
+                    <div class="card-icon">📡</div>
+                    <span class="card-number">20 / 20</span>
+                </div>
+                <h3 class="card-title">Channel Strategy</h3>
+                <p class="card-desc">Platform prioritization, content calendar, budget allocation, and cross-channel integration.</p>
+                <div class="card-footer">
+                    <span class="card-badge badge-ready">● Ready</span>
+                    <div class="card-arrow">→</div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-logo">MIKO<span>REAN</span></div>
+        <p class="footer-tagline">Tech Accessories. Engineered for Nigeria.</p>
+        <div class="footer-divider"></div>
+        <div class="footer-credit">
+            <strong>Prepared by Henry Ofido</strong><br>
+            Brand and Marketing Strategist
+        </div>
+        <div class="footer-year">© 2026 MIKOREAN. All rights reserved.</div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        // ===== LOADER =====
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                loader.style.transition = 'opacity 0.6s ease';
+                setTimeout(() => loader.style.display = 'none', 600);
+            }, 800);
+        });
+
+        // ===== THREE.JS HERO BACKGROUND =====
+        (function() {
+            const canvas = document.getElementById('hero-canvas');
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30;
+
+            // Particles
+            const particleCount = 800;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const velocities = [];
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 60;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 60;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 40;
+                velocities.push({
+                    x: (Math.random() - 0.5) * 0.01,
+                    y: (Math.random() - 0.5) * 0.01,
+                    z: (Math.random() - 0.5) * 0.005
+                });
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const material = new THREE.PointsMaterial({
+                color: 0x00D4FF,
+                size: 0.08,
+                transparent: true,
+                opacity: 0.6,
+                blending: THREE.AdditiveBlending,
+                sizeAttenuation: true
+            });
+
+            const particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Wireframe shapes
+            const shapes = [];
+            const shapeGeos = [
+                new THREE.IcosahedronGeometry(1.5, 0),
+                new THREE.OctahedronGeometry(1.2, 0),
+                new THREE.TetrahedronGeometry(1, 0)
+            ];
+
+            for (let i = 0; i < 6; i++) {
+                const geo = shapeGeos[i % shapeGeos.length];
+                const mat = new THREE.MeshBasicMaterial({
+                    color: i % 2 === 0 ? 0x00D4FF : 0x4a4a4a,
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.15
+                });
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.position.set(
+                    (Math.random() - 0.5) * 40,
+                    (Math.random() - 0.5) * 30,
+                    (Math.random() - 0.5) * 20
+                );
+                mesh.userData = {
+                    rotSpeed: { x: Math.random() * 0.005, y: Math.random() * 0.005 },
+                    floatSpeed: Math.random() * 0.002 + 0.001,
+                    floatOffset: Math.random() * Math.PI * 2
+                };
+                scene.add(mesh);
+                shapes.push(mesh);
+            }
+
+            // Lines
+            const lineMat = new THREE.LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.05 });
+            for (let i = 0; i < 12; i++) {
+                const lineGeo = new THREE.BufferGeometry();
+                const pts = [
+                    new THREE.Vector3((Math.random() - 0.5) * 50, (Math.random() - 0.5) * 40, (Math.random() - 0.5) * 20),
+                    new THREE.Vector3((Math.random() - 0.5) * 50, (Math.random() - 0.5) * 40, (Math.random() - 0.5) * 20)
+                ];
+                lineGeo.setFromPoints(pts);
+                scene.add(new THREE.Line(lineGeo, lineMat));
+            }
+
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+                mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                const pos = particles.geometry.attributes.position.array;
+                for (let i = 0; i < particleCount; i++) {
+                    pos[i * 3] += velocities[i].x;
+                    pos[i * 3 + 1] += velocities[i].y;
+                    pos[i * 3 + 2] += velocities[i].z;
+
+                    if (Math.abs(pos[i * 3]) > 30) velocities[i].x *= -1;
+                    if (Math.abs(pos[i * 3 + 1]) > 30) velocities[i].y *= -1;
+                    if (Math.abs(pos[i * 3 + 2]) > 20) velocities[i].z *= -1;
+                }
+                particles.geometry.attributes.position.needsUpdate = true;
+
+                shapes.forEach(s => {
+                    s.rotation.x += s.userData.rotSpeed.x;
+                    s.rotation.y += s.userData.rotSpeed.y;
+                    s.position.y += Math.sin(Date.now() * s.userData.floatSpeed + s.userData.floatOffset) * 0.005;
+                });
+
+                camera.position.x += (mouseX * 2 - camera.position.x) * 0.02;
+                camera.position.y += (-mouseY * 2 - camera.position.y) * 0.02;
+                camera.lookAt(scene.position);
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        })();
+
+        // ===== GSAP ANIMATIONS =====
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Nav show/hide
+        ScrollTrigger.create({
+            start: 100,
+            onUpdate: (self) => {
+                document.getElementById('nav').classList.toggle('visible', self.progress > 0);
+            }
+        });
+
+        // Hero animations
+        gsap.from('.hero-badge', { opacity: 0, y: 20, duration: 1, delay: 1 });
+        gsap.from('.hero-logo', { opacity: 0, y: 30, duration: 1, delay: 1.2 });
+        gsap.from('.hero-tagline', { opacity: 0, y: 20, duration: 1, delay: 1.4 });
+        gsap.from('.hero-subtitle', { opacity: 0, y: 20, duration: 1, delay: 1.6 });
+
+        // Stats counter
+        gsap.from('.stat-item', {
+            scrollTrigger: { trigger: '.stats-bar', start: 'top 80%' },
+            opacity: 0, y: 30, duration: 0.8, stagger: 0.15
+        });
+
+        // Section header
+        gsap.from('.section-header > *', {
+            scrollTrigger: { trigger: '.section-header', start: 'top 80%' },
+            opacity: 0, y: 30, duration: 0.8, stagger: 0.15
+        });
+
+        // Report cards - ensure they're visible even if ScrollTrigger fails
+        document.querySelectorAll('.report-card').forEach(card => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        });
+
+        gsap.from('.report-card', {
+            scrollTrigger: { trigger: '.reports-grid', start: 'top 85%', toggleActions: 'play none none none' },
+            opacity: 0, y: 40, duration: 0.6, stagger: { amount: 0.8, grid: 'auto', from: 'start' },
+            onComplete: function() {
+                document.querySelectorAll('.report-card').forEach(card => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                });
+            }
+        });
+
+        // Card hover glow effect
+        document.querySelectorAll('.report-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', ((e.clientX - rect.left) / rect.width * 100) + '%');
+                card.style.setProperty('--mouse-y', ((e.clientY - rect.top) / rect.height * 100) + '%');
+            });
+        });
+
+        // Stat number animation
+        document.querySelectorAll('.stat-number').forEach(el => {
+            const target = parseInt(el.textContent.replace('+', ''));
+            const hasPlus = el.textContent.includes('+');
+            el.textContent = '0';
+            ScrollTrigger.create({
+                trigger: el,
+                start: 'top 85%',
+                onEnter: () => {
+                    gsap.to({ val: 0 }, {
+                        val: target,
+                        duration: 2,
+                        ease: 'power2.out',
+                        onUpdate: function() {
+                            el.textContent = Math.round(this.targets()[0].val) + (hasPlus ? '+' : '');
+                        }
+                    });
+                },
+                once: true
+            });
+        });
+    </script>
+</body>
+</html>

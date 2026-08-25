@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Viral Playbook — MIKOREAN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+        :root{--grey-900:#1a1a1a;--grey-800:#2d2d2d;--grey-700:#4a4a4a;--grey-600:#666;--white:#fff;--off-white:#f5f5f5;--black:#000;--dark:#111;--accent:#00D4FF;--accent-dim:rgba(0,212,255,0.1);}
+        html{scroll-behavior:smooth;}
+        body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--white);-webkit-font-smoothing:antialiased;line-height:1.6;}
+        .report-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(20px);background:rgba(17,17,17,0.85);border-bottom:1px solid rgba(255,255,255,0.05);}
+        .back-link{display:flex;align-items:center;gap:0.5rem;color:var(--grey-600);text-decoration:none;font-size:0.85rem;transition:color 0.3s;}
+        .back-link:hover{color:var(--accent);}
+        .back-link svg{width:16px;height:16px;}
+        .nav-logo{font-weight:800;font-size:1rem;letter-spacing:0.1em;}
+        .nav-logo span{color:var(--accent);}
+        .report-hero{min-height:60vh;display:flex;flex-direction:column;justify-content:center;padding:8rem 2rem 4rem;max-width:900px;margin:0 auto;}
+        .report-label{font-size:0.75rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;}
+        .report-hero h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1.5rem;}
+        .report-meta{display:flex;gap:2rem;color:var(--grey-600);font-size:0.85rem;flex-wrap:wrap;}
+        .report-meta strong{color:var(--white);font-weight:600;}
+        .report-content{max-width:900px;margin:0 auto;padding:0 2rem 6rem;}
+        .toc{background:rgba(45,45,45,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:2rem;margin-bottom:4rem;}
+        .toc h3{font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:1.25rem;}
+        .toc-list{list-style:none;columns:2;column-gap:2rem;}
+        .toc-list li{padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);break-inside:avoid;}
+        .toc-list a{color:var(--grey-600);text-decoration:none;font-size:0.9rem;transition:color 0.3s;display:flex;gap:0.75rem;}
+        .toc-list a:hover{color:var(--accent);}
+        .toc-num{color:var(--grey-700);font-weight:600;min-width:1.5rem;}
+        .metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.05);border-radius:16px;overflow:hidden;margin-bottom:4rem;}
+        .metric-card{padding:2rem;text-align:center;background:var(--dark);}
+        .metric-value{font-size:2rem;font-weight:800;color:var(--accent);margin-bottom:0.5rem;}
+        .metric-label{font-size:0.75rem;color:var(--grey-600);letter-spacing:0.1em;text-transform:uppercase;}
+        .content-section{margin-bottom:4rem;}
+        .content-section h2{font-size:1.8rem;font-weight:800;margin-bottom:1rem;letter-spacing:-0.02em;}
+        .content-section h2 span{color:var(--accent);}
+        .content-section h3{font-size:1.2rem;font-weight:700;margin:2rem 0 1rem;color:var(--off-white);}
+        .content-section p{color:var(--grey-600);margin-bottom:1.25rem;line-height:1.7;}
+        .callout{background:rgba(0,212,255,0.05);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:1.5rem 2rem;margin:2rem 0;}
+        .callout-title{font-size:0.8rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;}
+        .callout p{color:var(--grey-600);margin:0;}
+        .styled-list{list-style:none;margin:1.5rem 0;}
+        .styled-list li{padding:0.75rem 0;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--grey-600);display:flex;gap:0.75rem;align-items:flex-start;}
+        .styled-list li::before{content:'→';color:var(--accent);font-weight:600;flex-shrink:0;}
+        .challenge-card{background:rgba(45,45,45,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.5rem;margin-bottom:1rem;transition:border-color 0.3s;}
+        .challenge-card:hover{border-color:rgba(0,212,255,0.2);}
+        .challenge-label{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem;font-weight:600;}
+        .challenge-title{font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;}
+        .challenge-desc{color:var(--grey-600);font-size:0.9rem;}
+        .bar-chart{margin:2rem 0;}
+        .bar-row{display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem;}
+        .bar-label{min-width:120px;font-size:0.8rem;color:var(--grey-600);text-align:right;}
+        .bar-track{flex:1;height:28px;background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden;}
+        .bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 0.75rem;font-size:0.75rem;font-weight:600;color:var(--dark);transition:width 1.5s cubic-bezier(0.16,1,0.3,1);}
+        .bar-fill.blue{background:linear-gradient(90deg,var(--accent),#00a8cc);}
+        .bar-fill.grey{background:linear-gradient(90deg,var(--grey-700),var(--grey-600));}
+        .bar-fill.green{background:linear-gradient(90deg,#22c55e,#16a34a);}
+        .report-footer{border-top:1px solid rgba(255,255,255,0.05);padding:3rem 2rem;max-width:900px;margin:0 auto;}
+        .footer-nav{display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap;}
+        .footer-nav a{color:var(--grey-600);text-decoration:none;font-size:0.85rem;padding:1rem 1.5rem;border:1px solid rgba(255,255,255,0.06);border-radius:12px;transition:all 0.3s;flex:1;min-width:200px;}
+        .footer-nav a:hover{border-color:var(--accent);color:var(--accent);}
+        .footer-nav .label{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:0.25rem;color:var(--grey-700);}
+        .footer-nav .title{font-weight:600;color:var(--white);}
+        .credit-footer{text-align:center;padding:3rem 2rem;border-top:1px solid rgba(255,255,255,0.03);margin-top:3rem;}
+        .credit-footer p{font-size:0.8rem;color:var(--grey-700);}
+        .credit-footer strong{color:var(--white);}
+        @media(max-width:768px){.toc-list{columns:1;}.report-hero{padding:7rem 1.25rem 3rem;}.report-content{padding:0 1.25rem 4rem;}.report-nav{padding:0.75rem 1.25rem;}}
+        @media print{.report-nav{display:none;}body{background:white;color:black;}}
+    </style>
+</head>
+<body>
+    <nav class="report-nav">
+        <a href="index.html" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to Portfolio</a>
+        <div class="nav-logo">MIKO<span>REAN</span></div>
+    </nav>
+
+    <section class="report-hero">
+        <div class="report-label">Report 03 of 20</div>
+        <h1>TikTok Viral Playbook</h1>
+        <div class="report-meta">
+            <span>Prepared by <strong>Henry Ofido</strong></span>
+            <span>Brand and Marketing Strategist</span>
+            <span>August 2026</span>
+        </div>
+    </section>
+
+    <div class="report-content">
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul class="toc-list">
+                <li><a href="#s1"><span class="toc-num">01</span> TikTok Landscape Nigeria</a></li>
+                <li><a href="#s2"><span class="toc-num">02</span> Viral Challenge Concepts</a></li>
+                <li><a href="#s3"><span class="toc-num">03</span> Content Calendar</a></li>
+                <li><a href="#s4"><span class="toc-num">04</span> TikTok Shop Integration</a></li>
+                <li><a href="#s5"><span class="toc-num">05</span> Creator Partnerships</a></li>
+                <li><a href="#s6"><span class="toc-num">06</span> Performance Targets</a></li>
+            </ul>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card"><div class="metric-value">6</div><div class="metric-label">Viral Challenges</div></div>
+            <div class="metric-card"><div class="metric-value">52</div><div class="metric-label">Week Calendar</div></div>
+            <div class="metric-card"><div class="metric-value">25</div><div class="metric-label">Creator Partners</div></div>
+            <div class="metric-card"><div class="metric-value">30</div><div class="metric-label">Videos/Month</div></div>
+        </div>
+
+        <section class="content-section" id="s1">
+            <h2><span>01</span> TikTok Landscape Nigeria</h2>
+            <p>TikTok has exploded in Nigeria with over 20 million monthly active users. The platform is increasingly becoming a discovery engine for tech products, with "tech TikTok" (#TechTok) generating billions of views globally.</p>
+            <div class="callout">
+                <div class="callout-title">Opportunity</div>
+                <p>Nigerian tech TikTok is still nascent compared to fashion and comedy niches. Early mover advantage in product showcase and review content can establish Mikorean as the go-to tech accessories brand on the platform.</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="s2">
+            <h2><span>02</span> Viral Challenge Concepts</h2>
+
+            <div class="challenge-card">
+                <div class="challenge-label">Challenge 01</div>
+                <div class="challenge-title">#MikoreanSetup — The Desk Glow-Up</div>
+                <div class="challenge-desc">Users transform their desk setups using Mikorean accessories. Before/after format with trending audio. Target: 5M views in first week.</div>
+            </div>
+            <div class="challenge-card">
+                <div class="challenge-label">Challenge 02</div>
+                <div class="challenge-title">#BatteryChallenge — Power Test</div>
+                <div class="challenge-desc">Side-by-side battery drain test: Mikorean PowerBank vs competitors. Satisfying visual of phone charging speed. Educational + entertaining.</div>
+            </div>
+            <div class="challenge-card">
+                <div class="challenge-label">Challenge 03</div>
+                <div class="challenge-title">#SoundCheck — Audio Quality</div>
+                <div class="challenge-desc">Blind audio test challenge. Users compare Mikorean earbuds with premium brands. Real reactions, authentic content. Target: 10M views.</div>
+            </div>
+            <div class="challenge-card">
+                <div class="challenge-label">Challenge 04</div>
+                <div class="challenge-title">#ProtectTest — Case Durability</div>
+                <div class="challenge-desc">Drop test challenge with Mikorean cases. Gradually increasing heights. Suspense + shock value. High shareability factor.</div>
+            </div>
+
+            <div class="bar-chart">
+                <h3>Projected Viral Reach</h3>
+                <div class="bar-row"><span class="bar-label">#MikoreanSetup</span><div class="bar-track"><div class="bar-fill blue" data-width="85">5M views target</div></div></div>
+                <div class="bar-row"><span class="bar-label">#BatteryChallenge</span><div class="bar-track"><div class="bar-fill blue" data-width="70">3M views target</div></div></div>
+                <div class="bar-row"><span class="bar-label">#SoundCheck</span><div class="bar-track"><div class="bar-fill green" data-width="95">10M views target</div></div></div>
+                <div class="bar-row"><span class="bar-label">#ProtectTest</span><div class="bar-track"><div class="bar-fill blue" data-width="60">2M views target</div></div></div>
+            </div>
+        </section>
+
+        <section class="content-section" id="s3">
+            <h2><span>03</span> Content Calendar</h2>
+            <p>Weekly content mix for sustained growth and engagement.</p>
+            <ul class="styled-list">
+                <li><strong>Monday:</strong> Product showcase — Quick feature highlight (15-30s)</li>
+                <li><strong>Tuesday:</strong> Behind-the-scenes — Factory/team content (30-60s)</li>
+                <li><strong>Wednesday:</strong> Tutorial/Tips — How to use accessories (30-60s)</li>
+                <li><strong>Thursday:</strong> Trend participation — Use trending sounds/formats (15s)</li>
+                <li><strong>Friday:</strong> User-generated content — Repost customer videos (15-30s)</li>
+                <li><strong>Saturday:</strong> Challenge content — Viral challenge participation (15-30s)</li>
+                <li><strong>Sunday:</strong> Lifestyle content — Weekend setups, travel tech (30-60s)</li>
+            </ul>
+        </section>
+
+        <section class="content-section" id="s4">
+            <h2><span>04</span> TikTok Shop Integration</h2>
+            <p>TikTok Shop is now available in Nigeria. Mikorean should be among the first tech accessory brands to fully leverage this commerce feature.</p>
+            <ul class="styled-list">
+                <li><strong>Product Listings:</strong> Full catalog with optimized descriptions and high-quality images</li>
+                <li><strong>Live Shopping:</strong> Weekly live sessions showcasing products with real-time Q&A</li>
+                <li><strong>Affiliate Program:</strong> Commission-based creator partnerships for passive sales</li>
+                <li><strong>Flash Sales:</strong> TikTok-exclusive deals to drive urgency and platform loyalty</li>
+                <li><strong>Review Incentives:</strong> Discount codes for customers who post review videos</li>
+            </ul>
+        </section>
+
+        <section class="content-section" id="s5">
+            <h2><span>05</span> Creator Partnerships</h2>
+            <p>Strategic creator partnerships across tiers for maximum reach and authenticity.</p>
+
+            <div class="metrics-grid">
+                <div class="metric-card"><div class="metric-value">5</div><div class="metric-label">Macro (500K+)</div></div>
+                <div class="metric-card"><div class="metric-value">10</div><div class="metric-label">Mid (50-500K)</div></div>
+                <div class="metric-card"><div class="metric-value">10</div><div class="metric-label">Micro (10-50K)</div></div>
+            </div>
+        </section>
+
+        <section class="content-section" id="s6">
+            <h2><span>06</span> Performance Targets</h2>
+            <div class="metrics-grid">
+                <div class="metric-card"><div class="metric-value">500K</div><div class="metric-label">Followers (6 months)</div></div>
+                <div class="metric-card"><div class="metric-value">50M</div><div class="metric-label">Monthly Views</div></div>
+                <div class="metric-card"><div class="metric-value">5%</div><div class="metric-label">Engagement Rate</div></div>
+                <div class="metric-card"><div class="metric-value">200</div><div class="metric-label">Shop Orders/Month</div></div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="report-footer">
+        <div class="footer-nav">
+            <a href="report-twitter-intelligence.html"><span class="label">← Previous</span><span class="title">X/Twitter Intelligence Report</span></a>
+            <a href="report-seo-strategy.html"><span class="label">Next →</span><span class="title">SEO Strategy Playbook</span></a>
+        </div>
+    </footer>
+    <div class="credit-footer"><p><strong>Prepared by Henry Ofido</strong> — Brand and Marketing Strategist</p></div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.from('.report-hero > *', {opacity:0,y:30,duration:0.8,stagger:0.15,delay:0.3});
+        gsap.from('.metric-card', {scrollTrigger:{trigger:'.metrics-grid',start:'top 85%'},opacity:0,y:20,duration:0.6,stagger:0.1});
+        gsap.from('.content-section', {scrollTrigger:{trigger:'.report-content',start:'top 80%'},opacity:0,y:30,duration:0.8,stagger:0.2});
+        document.querySelectorAll('.bar-fill').forEach(bar => {const w=bar.dataset.width;bar.style.width='0%';ScrollTrigger.create({trigger:bar,start:'top 90%',onEnter:()=>gsap.to(bar,{width:w+'%',duration:1.2,ease:'power2.out'}),once:true});});
+    </script>
+</body>
+</html>

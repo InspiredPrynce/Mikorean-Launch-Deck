@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Service Framework — MIKOREAN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+        :root{--grey-900:#1a1a1a;--grey-800:#2d2d2d;--grey-700:#4a4a4a;--grey-600:#666;--white:#fff;--off-white:#f5f5f5;--black:#000;--dark:#111;--accent:#00D4FF;}
+        html{scroll-behavior:smooth;}body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--white);-webkit-font-smoothing:antialiased;line-height:1.6;}
+        .report-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(20px);background:rgba(17,17,17,0.85);border-bottom:1px solid rgba(255,255,255,0.05);}
+        .back-link{display:flex;align-items:center;gap:0.5rem;color:var(--grey-600);text-decoration:none;font-size:0.85rem;transition:color 0.3s;}.back-link:hover{color:var(--accent);}.back-link svg{width:16px;height:16px;}
+        .nav-logo{font-weight:800;font-size:1rem;letter-spacing:0.1em;}.nav-logo span{color:var(--accent);}
+        .report-hero{min-height:60vh;display:flex;flex-direction:column;justify-content:center;padding:8rem 2rem 4rem;max-width:900px;margin:0 auto;}
+        .report-label{font-size:0.75rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;}
+        .report-hero h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1.5rem;}
+        .report-meta{display:flex;gap:2rem;color:var(--grey-600);font-size:0.85rem;flex-wrap:wrap;}.report-meta strong{color:var(--white);font-weight:600;}
+        .report-content{max-width:900px;margin:0 auto;padding:0 2rem 6rem;}
+        .toc{background:rgba(45,45,45,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:2rem;margin-bottom:4rem;}
+        .toc h3{font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:1.25rem;}
+        .toc-list{list-style:none;columns:2;column-gap:2rem;}.toc-list li{padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);break-inside:avoid;}
+        .toc-list a{color:var(--grey-600);text-decoration:none;font-size:0.9rem;transition:color 0.3s;display:flex;gap:0.75rem;}.toc-list a:hover{color:var(--accent);}
+        .toc-num{color:var(--grey-700);font-weight:600;min-width:1.5rem;}
+        .metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.05);border-radius:16px;overflow:hidden;margin-bottom:4rem;}
+        .metric-card{padding:2rem;text-align:center;background:var(--dark);}.metric-value{font-size:2rem;font-weight:800;color:var(--accent);margin-bottom:0.5rem;}
+        .metric-label{font-size:0.75rem;color:var(--grey-600);letter-spacing:0.1em;text-transform:uppercase;}
+        .content-section{margin-bottom:4rem;}.content-section h2{font-size:1.8rem;font-weight:800;margin-bottom:1rem;letter-spacing:-0.02em;}
+        .content-section h2 span{color:var(--accent);}.content-section h3{font-size:1.2rem;font-weight:700;margin:2rem 0 1rem;color:var(--off-white);}
+        .content-section p{color:var(--grey-600);margin-bottom:1.25rem;line-height:1.7;}
+        .callout{background:rgba(0,212,255,0.05);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:1.5rem 2rem;margin:2rem 0;}
+        .callout-title{font-size:0.8rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;}
+        .callout p{color:var(--grey-600);margin:0;}
+        .styled-list{list-style:none;margin:1.5rem 0;}.styled-list li{padding:0.75rem 0;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--grey-600);display:flex;gap:0.75rem;align-items:flex-start;}
+        .styled-list li::before{content:'→';color:var(--accent);font-weight:600;flex-shrink:0;}
+        .data-table{width:100%;border-collapse:collapse;margin:2rem 0;background:rgba(45,45,45,0.2);border-radius:12px;overflow:hidden;}
+        .data-table th{text-align:left;padding:1rem 1.25rem;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);background:rgba(0,212,255,0.05);border-bottom:1px solid rgba(255,255,255,0.06);}
+        .data-table td{padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--grey-600);font-size:0.9rem;}
+        .data-table tr:hover td{background:rgba(255,255,255,0.02);}
+        .bar-chart{margin:2rem 0;}.bar-row{display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem;}
+        .bar-label{min-width:120px;font-size:0.8rem;color:var(--grey-600);text-align:right;}
+        .bar-track{flex:1;height:28px;background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden;}
+        .bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 0.75rem;font-size:0.75rem;font-weight:600;color:var(--dark);transition:width 1.5s cubic-bezier(0.16,1,0.3,1);}
+        .bar-fill.blue{background:linear-gradient(90deg,var(--accent),#00a8cc);}.bar-fill.grey{background:linear-gradient(90deg,var(--grey-700),var(--grey-600));}
+        .bar-fill.green{background:linear-gradient(90deg,#22c55e,#16a34a);}
+        .report-footer{border-top:1px solid rgba(255,255,255,0.05);padding:3rem 2rem;max-width:900px;margin:0 auto;}
+        .footer-nav{display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap;}
+        .footer-nav a{color:var(--grey-600);text-decoration:none;font-size:0.85rem;padding:1rem 1.5rem;border:1px solid rgba(255,255,255,0.06);border-radius:12px;transition:all 0.3s;flex:1;min-width:200px;}
+        .footer-nav a:hover{border-color:var(--accent);color:var(--accent);}
+        .footer-nav .label{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:0.25rem;color:var(--grey-700);}
+        .footer-nav .title{font-weight:600;color:var(--white);}
+        .credit-footer{text-align:center;padding:3rem 2rem;border-top:1px solid rgba(255,255,255,0.03);margin-top:3rem;}.credit-footer p{font-size:0.8rem;color:var(--grey-700);}.credit-footer strong{color:var(--white);}
+        @media(max-width:768px){.toc-list{columns:1;}.report-hero{padding:7rem 1.25rem 3rem;}.report-content{padding:0 1.25rem 4rem;}.report-nav{padding:0.75rem 1.25rem;}}
+        @media print{.report-nav{display:none;}body{background:white;color:black;}}
+    </style>
+</head>
+<body>
+    <nav class="report-nav">
+        <a href="index.html" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to Portfolio</a>
+        <div class="nav-logo">MIKO<span>REAN</span></div>
+    </nav>
+    <section class="report-hero">
+        <div class="report-label">Report 10 of 20</div>
+        <h1>Customer Service Framework</h1>
+        <div class="report-meta"><span>Prepared by <strong>Henry Ofido</strong></span><span>Brand and Marketing Strategist</span><span>August 2026</span></div>
+    </section>
+    <div class="report-content">
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul class="toc-list">
+                <li><a href="#s1"><span class="toc-num">01</span> Service Philosophy</a></li>
+                <li><a href="#s2"><span class="toc-num">02</span> FAQ Database</a></li>
+                <li><a href="#s3"><span class="toc-num">03</span> Script Templates</a></li>
+                <li><a href="#s4"><span class="toc-num">04</span> Escalation Matrix</a></li>
+                <li><a href="#s5"><span class="toc-num">05</span> SLAs & Metrics</a></li>
+            </ul>
+        </div>
+        <div class="metrics-grid">
+            <div class="metric-card"><div class="metric-value">84+</div><div class="metric-label">FAQs Covered</div></div>
+            <div class="metric-card"><div class="metric-value">2hr</div><div class="metric-label">Response Time</div></div>
+            <div class="metric-card"><div class="metric-value">24hr</div><div class="metric-label">Resolution Time</div></div>
+            <div class="metric-card"><div class="metric-value">95%</div><div class="metric-label">CSAT Target</div></div>
+        </div>
+
+        <section class="content-section" id="s1">
+            <h2><span>01</span> Service Philosophy</h2>
+            <p>Customer service is Mikorean's competitive advantage. In a market where post-purchase support is often neglected, exceptional service builds loyalty and drives word-of-mouth referrals.</p>
+            <div class="callout"><div class="callout-title">Service Principle</div><p>"Every interaction is an opportunity to create a brand advocate. Solve fast, follow up always, and never say 'that's not my department.'"</p></div>
+        </section>
+
+        <section class="content-section" id="s2">
+            <h2><span>02</span> FAQ Database</h2>
+            <p>84+ frequently asked questions organized by category.</p>
+            <div class="bar-chart">
+                <h3>FAQ Categories</h3>
+                <div class="bar-row"><span class="bar-label">Orders & Shipping</span><div class="bar-track"><div class="bar-fill blue" data-width="30">25 FAQs</div></div></div>
+                <div class="bar-row"><span class="bar-label">Product Info</span><div class="bar-track"><div class="bar-fill blue" data-width="25">21 FAQs</div></div></div>
+                <div class="bar-row"><span class="bar-label">Returns & Warranty</span><div class="bar-track"><div class="bar-fill green" data-width="20">17 FAQs</div></div></div>
+                <div class="bar-row"><span class="bar-label">Payment & Pricing</span><div class="bar-track"><div class="bar-fill grey" data-width="15">12 FAQs</div></div></div>
+                <div class="bar-row"><span class="bar-label">Account & Technical</span><div class="bar-track"><div class="bar-fill grey" data-width="12">9 FAQs</div></div></div>
+            </div>
+        </section>
+
+        <section class="content-section" id="s3">
+            <h2><span>03</span> Script Templates</h2>
+            <table class="data-table">
+                <thead><tr><th>Scenario</th><th>Channel</th><th>Response Time</th><th>Template</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Order Inquiry</strong></td><td>WhatsApp</td><td>< 30 min</td><td>Track & update with ETA</td></tr>
+                    <tr><td><strong>Return Request</strong></td><td>Email</td><td>< 2 hr</td><td>Process with pickup scheduling</td></tr>
+                    <tr><td><strong>Warranty Claim</strong></td><td>Phone</td><td>< 1 hr</td><td>Diagnose & ship replacement</td></tr>
+                    <tr><td><strong>Product Question</strong></td><td>Social DM</td><td>< 1 hr</td><td>Detailed product information</td></tr>
+                    <tr><td><strong>Complaint</strong></td><td>All</td><td>< 30 min</td><td>Empathize, resolve, follow up</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section" id="s4">
+            <h2><span>04</span> Escalation Matrix</h2>
+            <ul class="styled-list">
+                <li><strong>Level 1 (Frontline):</strong> Basic inquiries, order status, product info — resolve 80% of tickets</li>
+                <li><strong>Level 2 (Specialist):</strong> Technical issues, warranty claims, complex returns — resolve 15%</li>
+                <li><strong>Level 3 (Management):</strong> Escalated complaints, PR issues, refunds >₦50K — resolve 5%</li>
+                <li><strong>Emergency:</strong> Safety concerns, social media crises — immediate executive involvement</li>
+            </ul>
+        </section>
+
+        <section class="content-section" id="s5">
+            <h2><span>05</span> SLAs & Metrics</h2>
+            <div class="metrics-grid">
+                <div class="metric-card"><div class="metric-value">2hr</div><div class="metric-label">First Response</div></div>
+                <div class="metric-card"><div class="metric-value">24hr</div><div class="metric-label">Resolution Target</div></div>
+                <div class="metric-card"><div class="metric-value">95%</div><div class="metric-label">CSAT Score</div></div>
+                <div class="metric-card"><div class="metric-value">80%</div><div class="metric-label">First Contact Resolution</div></div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="report-footer">
+        <div class="footer-nav">
+            <a href="report-instagram.html"><span class="label">← Previous</span><span class="title">Instagram Playbook</span></a>
+            <a href="report-growth.html"><span class="label">Next →</span><span class="title">Growth Strategy</span></a>
+        </div>
+    </footer>
+    <div class="credit-footer"><p><strong>Prepared by Henry Ofido</strong> — Brand and Marketing Strategist</p></div>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.from('.report-hero > *', {opacity:0,y:30,duration:0.8,stagger:0.15,delay:0.3});
+        gsap.from('.metric-card', {scrollTrigger:{trigger:'.metrics-grid',start:'top 85%'},opacity:0,y:20,duration:0.6,stagger:0.1});
+        gsap.from('.content-section', {scrollTrigger:{trigger:'.report-content',start:'top 80%'},opacity:0,y:30,duration:0.8,stagger:0.2});
+        document.querySelectorAll('.bar-fill').forEach(bar => {const w=bar.dataset.width;bar.style.width='0%';ScrollTrigger.create({trigger:bar,start:'top 90%',onEnter:()=>gsap.to(bar,{width:w+'%',duration:1.2,ease:'power2.out'}),once:true});});
+    </script>
+</body>
+</html>
