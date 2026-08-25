@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Marketing Strategies — MIKOREAN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --grey-900: #1a1a1a; --grey-800: #2d2d2d; --grey-700: #4a4a4a;
+            --grey-600: #666666; --white: #ffffff; --off-white: #f5f5f5;
+            --black: #000000; --dark: #111111; --accent: #00D4FF;
+            --accent-glow: rgba(0,212,255,0.3); --accent-dim: rgba(0,212,255,0.1);
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+        .report-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(20px); background: rgba(17,17,17,0.85); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .back-link { display: flex; align-items: center; gap: 0.5rem; color: var(--grey-600); text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
+        .back-link:hover { color: var(--accent); }
+        .back-link svg { width: 16px; height: 16px; }
+        .nav-logo { font-weight: 800; font-size: 1rem; letter-spacing: 0.1em; }
+        .nav-logo span { color: var(--accent); }
+        .report-hero { min-height: 60vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 2rem 4rem; max-width: 900px; margin: 0 auto; }
+        .report-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; }
+        .report-hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1.5rem; }
+        .report-meta { display: flex; gap: 2rem; color: var(--grey-600); font-size: 0.85rem; flex-wrap: wrap; }
+        .report-meta strong { color: var(--white); font-weight: 600; }
+        .report-content { max-width: 900px; margin: 0 auto; padding: 0 2rem 6rem; }
+        .toc { background: rgba(45,45,45,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 2rem; margin-bottom: 4rem; }
+        .toc h3 { font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+        .toc-list { list-style: none; columns: 2; column-gap: 2rem; }
+        .toc-list li { padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); break-inside: avoid; }
+        .toc-list a { color: var(--grey-600); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; display: flex; gap: 0.75rem; }
+        .toc-list a:hover { color: var(--accent); }
+        .toc-num { color: var(--grey-700); font-weight: 600; min-width: 1.5rem; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; overflow: hidden; margin-bottom: 4rem; }
+        .metric-card { padding: 2rem; text-align: center; background: var(--dark); }
+        .metric-value { font-size: 2rem; font-weight: 800; color: var(--accent); margin-bottom: 0.5rem; }
+        .metric-label { font-size: 0.75rem; color: var(--grey-600); letter-spacing: 0.1em; text-transform: uppercase; }
+        .content-section { margin-bottom: 4rem; }
+        .content-section h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.02em; }
+        .content-section h2 span { color: var(--accent); }
+        .content-section h3 { font-size: 1.2rem; font-weight: 700; margin: 2rem 0 1rem; color: var(--off-white); }
+        .content-section p { color: var(--grey-600); margin-bottom: 1.25rem; line-height: 1.7; }
+        .data-table { width: 100%; border-collapse: collapse; margin: 2rem 0; background: rgba(45,45,45,0.2); border-radius: 12px; overflow: hidden; }
+        .data-table th { text-align: left; padding: 1rem 1.25rem; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); background: rgba(0,212,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .data-table td { padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--grey-600); font-size: 0.9rem; }
+        .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+        .callout { background: rgba(0,212,255,0.05); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: 1.5rem 2rem; margin: 2rem 0; }
+        .callout-title { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+        .callout p { color: var(--grey-600); margin: 0; }
+        .styled-list { list-style: none; margin: 1.5rem 0; }
+        .styled-list li { padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--grey-600); display: flex; gap: 0.75rem; align-items: flex-start; }
+        .styled-list li::before { content: '\2192'; color: var(--accent); font-weight: 600; flex-shrink: 0; }
+        .tier-card { background: rgba(45,45,45,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+        .tier-card h4 { color: var(--accent); font-size: 1rem; margin-bottom: 0.75rem; }
+        .bar-chart { margin: 2rem 0; }
+        .bar-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+        .bar-label { min-width: 120px; font-size: 0.8rem; color: var(--grey-600); text-align: right; }
+        .bar-track { flex: 1; height: 28px; background: rgba(255,255,255,0.04); border-radius: 6px; overflow: hidden; position: relative; }
+        .bar-fill { height: 100%; border-radius: 6px; transition: width 1.5s cubic-bezier(0.16,1,0.3,1); display: flex; align-items: center; padding: 0 0.75rem; font-size: 0.75rem; font-weight: 600; color: var(--dark); }
+        .bar-fill.blue { background: linear-gradient(90deg, var(--accent), #00a8cc); }
+        .bar-fill.grey { background: linear-gradient(90deg, var(--grey-700), var(--grey-600)); }
+        .report-footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 3rem 2rem; max-width: 900px; margin: 0 auto; }
+        .footer-nav { display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+        .footer-nav a { color: var(--grey-600); text-decoration: none; font-size: 0.85rem; padding: 1rem 1.5rem; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; transition: all 0.3s; flex: 1; min-width: 200px; }
+        .footer-nav a:hover { border-color: var(--accent); color: var(--accent); }
+        .footer-nav .label { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-bottom: 0.25rem; color: var(--grey-700); }
+        .footer-nav .title { font-weight: 600; color: var(--white); }
+        .credit-footer { text-align: center; padding: 3rem 2rem; border-top: 1px solid rgba(255,255,255,0.03); margin-top: 3rem; }
+        .credit-footer p { font-size: 0.8rem; color: var(--grey-700); }
+        .credit-footer strong { color: var(--white); }
+        @media (max-width: 768px) { .toc-list { columns: 1; } .report-hero { padding: 7rem 1.25rem 3rem; } .report-content { padding: 0 1.25rem 4rem; } .report-nav { padding: 0.75rem 1.25rem; } }
+        @media print { .report-nav { display: none; } body { background: white; color: black; } }
+    </style>
+</head>
+<body>
+    <nav class="report-nav">
+        <a href="index.html" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back to Portfolio
+        </a>
+        <div class="nav-logo">MIKO<span>REAN</span></div>
+    </nav>
+
+    <section class="report-hero">
+        <div class="report-label">Report 23 of 23</div>
+        <h1>Offline Marketing Strategies</h1>
+        <div class="report-meta">
+            <span>Prepared by <strong>Henry Ofido</strong></span>
+            <span>Brand and Marketing Strategist</span>
+            <span>August 2026</span>
+        </div>
+    </section>
+
+    <div class="report-content">
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul class="toc-list">
+                <li><a href="#exec"><span class="toc-num">01</span> Executive Summary</a></li>
+                <li><a href="#markets"><span class="toc-num">02</span> Market Activations</a></li>
+                <li><a href="#campus"><span class="toc-num">03</span> University Campus Tour</a></li>
+                <li><a href="#mechanic"><span class="toc-num">04</span> Mechanic & Transport Hubs</a></li>
+                <li><a href="#corporate"><span class="toc-num">05</span> Corporate Gifting</a></li>
+                <li><a href="#events"><span class="toc-num">06</span> Event Sponsorships</a></li>
+                <li><a href="#roadshow"><span class="toc-num">07</span> Roadshow Campaign</a></li>
+                <li><a href="#retail"><span class="toc-num">08</span> Retail Expansion</a></li>
+                <li><a href="#grassroots"><span class="toc-num">09</span> Grassroots Community</a></li>
+                <li><a href="#seasonal"><span class="toc-num">10</span> Seasonal Campaigns</a></li>
+                <li><a href="#budget"><span class="toc-num">11</span> Budget & KPIs</a></li>
+            </ul>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value">500K+</div>
+                <div class="metric-label">Offline Reach (Month 6)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">7</div>
+                <div class="metric-label">Roadshow Cities</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">8</div>
+                <div class="metric-label">Universities Targeted</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">100+</div>
+                <div class="metric-label">Retail Points (Month 6)</div>
+            </div>
+        </div>
+
+        <section class="content-section" id="exec">
+            <h2><span>01</span> Executive Summary</h2>
+            <p>Nigeria's tech accessories market is won as much offline as online. Computer Village Lagos, Onitsha Electronics Market, and campus activations are where purchase decisions happen. Oraimo's 26-day nationwide roadshow and 7-month in-store activation across 9 cities demonstrate the power of offline presence.</p>
+            <p>Mikorean's offline strategy covers: market activations, university campus programs, corporate gifting, event sponsorships, roadshow campaigns, retail expansion, and community-level grassroots marketing. The "E Go Last" durability message must be proven through live demonstrations.</p>
+
+            <div class="callout">
+                <div class="callout-title">Nigerian Consumer Psychology</div>
+                <p>Nigerians trust people they see — not ads. The mechanic, the student rep, and the WhatsApp group admin are the real gatekeepers. Gifting a product to a respected community figure is worth 10x a paid ad. Live durability proof converts skeptics faster than any marketing campaign.</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="markets">
+            <h2><span>02</span> Market Activations</h2>
+
+            <h3>Computer Village Lagos — Anchor Market</h3>
+            <p>West Africa's largest electronics market. 500,000+ daily foot traffic. Every tech brand must have presence here.</p>
+            <table class="data-table">
+                <thead><tr><th>Activity</th><th>Frequency</th><th>Budget</th><th>Reach</th></tr></thead>
+                <tbody>
+                    <tr><td>Product demo booth (high-traffic zone)</td><td>Weekly</td><td>₦200K/event</td><td>5,000+ visitors</td></tr>
+                    <tr><td>"Mikorean Day" exclusive launch events</td><td>Monthly</td><td>₦500K/event</td><td>10,000+ visitors</td></tr>
+                    <tr><td>Free product testing stations</td><td>Ongoing</td><td>₦100K/week</td><td>1,000+ trials</td></tr>
+                    <tr><td>Durability challenge (drop test, stress test)</td><td>Weekly</td><td>₦150K/event</td><td>3,000+ views</td></tr>
+                    <tr><td>Branded kiosk (permanent)</td><td>Ongoing</td><td>₦2M setup + ₦200K/month</td><td>Continuous</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Onitsha Electronics Market</h3>
+            <p>Second-largest electronics market. Gateway to South-East and South-South Nigeria.</p>
+            <ul class="styled-list">
+                <li>Dealer onboarding: 2-3 wholesalers by Month 1 (₦500K budget)</li>
+                <li>Product launch event Month 2: ₦800K budget, 5,000+ visitors target</li>
+                <li>Igbo-language marketing materials (localization advantage)</li>
+                <li>Campus tie-in with UNIZIK and FUTO</li>
+            </ul>
+
+            <h3>Wuse II Abuja — Northern Hub</h3>
+            <p>Abuja's tech market center. Government workers, professionals, affluent consumers.</p>
+            <ul class="styled-list">
+                <li>2-3 distributor partners by Month 1</li>
+                <li>Corporate gifting pilot: 5 corporate clients by Month 2</li>
+                <li>Mall activations at Shoprite and Novare monthly</li>
+                <li>Arabic/Hausa signage at market stalls</li>
+            </ul>
+        </section>
+
+        <section class="content-section" id="campus">
+            <h2><span>03</span> University Campus Tour</h2>
+            <p>3M+ university students in target cities. Students are early adopters, brand loyalists, and social media amplifiers.</p>
+
+            <table class="data-table">
+                <thead><tr><th>University</th><th>City</th><th>Priority</th><th>Activation Type</th></tr></thead>
+                <tbody>
+                    <tr><td>UNILAG</td><td>Lagos</td><td>High</td><td>Full activation</td></tr>
+                    <tr><td>UNIBEN</td><td>Benin</td><td>High</td><td>Full activation</td></tr>
+                    <tr><td>FUTO</td><td>Owerri</td><td>High</td><td>Full activation</td></tr>
+                    <tr><td>UNIZIK</td><td>Awka</td><td>Medium</td><td>Demo + sales</td></tr>
+                    <tr><td>OAU</td><td>Ile-Ife</td><td>Medium</td><td>Demo + sales</td></tr>
+                    <tr><td>ABU</td><td>Zaria</td><td>Medium</td><td>Demo + sales</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Activation Day Schedule</h3>
+            <table class="data-table">
+                <thead><tr><th>Time</th><th>Activity</th><th>Purpose</th></tr></thead>
+                <tbody>
+                    <tr><td>9:00 AM</td><td>Setup + branding</td><td>Visual presence</td></tr>
+                    <tr><td>10:00 AM</td><td>Free charging station opens</td><td>Foot traffic driver</td></tr>
+                    <tr><td>11:00 AM</td><td>Product demo sessions</td><td>Education</td></tr>
+                    <tr><td>12:00 PM</td><td>Durability challenge live</td><td>Proof of quality</td></tr>
+                    <tr><td>1:00 PM</td><td>Flash sale (campus-only pricing)</td><td>Conversion</td></tr>
+                    <tr><td>2:00 PM</td><td>Campus ambassador recruitment</td><td>Network building</td></tr>
+                    <tr><td>3:00 PM</td><td>Giveaway raffle (follow + share)</td><td>Social amplification</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Campus Ambassador Program</h3>
+            <ul class="styled-list">
+                <li>Target: 10 ambassadors per university (80 total by Month 3)</li>
+                <li>Requirements: Active social media, 500+ followers, tech-savvy</li>
+                <li>15% commission on sales through unique code</li>
+                <li>Free products for content creation (1 product/month)</li>
+                <li>LinkedIn recommendation letter + certificate</li>
+                <li>3 social media posts/week + 1 campus demo event/month</li>
+            </ul>
+
+            <div class="callout">
+                <div class="callout-title">Campus-Specific Bundle</div>
+                <p>"Student Survival Kit" — cable + earbuds at ₦8,000 (₦10,000 value). Flash sale: First 20 buyers get free branded notebook.</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="mechanic">
+            <h2><span>04</span> Mechanic & Transport Hub Activations</h2>
+            <p>Mechanics are trusted community figures. A mechanic's recommendation carries more weight than any ad. Car chargers and phone holders are natural products for this channel.</p>
+
+            <table class="data-table">
+                <thead><tr><th>Activity</th><th>Target</th><th>Budget</th><th>Timeline</th></tr></thead>
+                <tbody>
+                    <tr><td>Mechanic shop branding (wall stickers)</td><td>100 shops in Lagos</td><td>₦500K</td><td>Month 1-2</td></tr>
+                    <tr><td>Car charger demo sessions</td><td>20 motor parks</td><td>₦300K</td><td>Month 2-3</td></tr>
+                    <tr><td>Phone holder installation service</td><td>50 shops</td><td>₦200K</td><td>Month 2-3</td></tr>
+                    <tr><td>Mechanic referral program</td><td>50 mechanics</td><td>₦100K/month</td><td>Ongoing</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Mechanic Referral Program</h3>
+            <ul class="styled-list">
+                <li>20% commission on car charger and phone holder sales</li>
+                <li>Free product for every 5 referrals</li>
+                <li>Quarterly mechanic meetup with Mikorean team</li>
+                <li>Branded aprons for top performers</li>
+            </ul>
+
+            <h3>Motor Park / Transport Hub Activations</h3>
+            <p>Target: Mile 12, Iddo, Oshodi, CMS motor parks in Lagos</p>
+            <ul class="styled-list">
+                <li>Free phone charging station (powered by Mikorean power banks)</li>
+                <li>Product display booth with "Travel Essentials" bundle</li>
+                <li>Branded stickers on danfo/keke NAPEP (mobile billboards)</li>
+                <li>Budget: ₦100K for stickers + ₦50K for rider incentives</li>
+            </ul>
+        </section>
+
+        <section class="content-section" id="corporate">
+            <h2><span>05</span> Corporate Gifting Program</h2>
+            <p>Companies spend ₦5K-₦50K per employee on gifts during festive seasons, AGMs, and team-building events.</p>
+
+            <table class="data-table">
+                <thead><tr><th>Segment</th><th>Companies</th><th>Budget/Employee</th><th>Volume</th></tr></thead>
+                <tbody>
+                    <tr><td>Banks & Fintechs</td><td>GTBank, Access Bank, OPay, PalmPay</td><td>₦15K-₦30K</td><td>5,000+ units</td></tr>
+                    <tr><td>Telecoms</td><td>MTN, Airtel, Glo, 9Mobile</td><td>₦10K-₦25K</td><td>3,000+ units</td></tr>
+                    <tr><td>Tech Companies</td><td>Andela, Flutterwave, Paystack</td><td>₦15K-₦40K</td><td>2,000+ units</td></tr>
+                    <tr><td>Oil & Gas</td><td>Shell, NNPC, Total, Oando</td><td>₦20K-₦50K</td><td>1,000+ units</td></tr>
+                    <tr><td>SMEs</td><td>10,000+ businesses</td><td>₦5K-₦15K</td><td>10,000+ units</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Corporate Product Bundles</h3>
+            <div class="tier-card">
+                <h4>Executive Bundle — ₦35,000</h4>
+                <p style="color:var(--grey-600);">Smart glasses (blue light filtering) + premium power bank (20,000mAh) + leather cable organizer + personalized engraving + premium gift box</p>
+            </div>
+            <div class="tier-card">
+                <h4>Team Bundle — ₦15,000</h4>
+                <p style="color:var(--grey-600);">Power bank (10,000mAh) + USB-C cable + phone stand + branded gift bag + thank-you card</p>
+            </div>
+            <div class="tier-card">
+                <h4>Starter Bundle — ₦8,000</h4>
+                <p style="color:var(--grey-600);">Fast-charging cable + earbuds + branded gift bag + warranty card</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="events">
+            <h2><span>06</span> Event Sponsorships</h2>
+
+            <h3>Tech Events</h3>
+            <table class="data-table">
+                <thead><tr><th>Event</th><th>Sponsorship</th><th>Budget</th><th>Reach</th></tr></thead>
+                <tbody>
+                    <tr><td>Techpoint Build</td><td>Charging station sponsor</td><td>₦2M</td><td>5,000+ attendees</td></tr>
+                    <tr><td>SheLeadsAfrica</td><td>Product sponsor</td><td>₦1M</td><td>2,000+ attendees</td></tr>
+                    <tr><td>Nigeria Tech Summit</td><td>Booth + demo</td><td>₦1.5M</td><td>3,000+ attendees</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Music & Entertainment</h3>
+            <ul class="styled-list">
+                <li>Afrobeats concerts: ₦1-3M for branded charging booths</li>
+                <li>Comedy shows: ₦500K-₦1M for product giveaways</li>
+                <li>University culturals: ₦300K/event for campus brand awareness</li>
+                <li>Church conferences: ₦500K-₦1M for charging stations + gifting</li>
+            </ul>
+
+            <h3>Sports Sponsorships</h3>
+            <ul class="styled-list">
+                <li>NPFL football matches: ₦1M/season for branded charging booths</li>
+                <li>Basketball (Lagos Islanders): ₦500K/season for halftime demos</li>
+                <li>Lagos City Marathon: ₦1M for water + charging station</li>
+            </ul>
+        </section>
+
+        <section class="content-section" id="roadshow">
+            <h2><span>07</span> Roadshow Campaign — "MIKOREAN Test Drive"</h2>
+            <p>A branded mobile pop-up van traveling to major cities for live demonstrations, durability challenges, and flash sales. Adapted from Oraimo's 26-day roadshow playbook.</p>
+
+            <table class="data-table">
+                <thead><tr><th>Stop</th><th>City</th><th>Duration</th><th>Budget</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>Lagos</td><td>5 days</td><td>₦2M</td></tr>
+                    <tr><td>2</td><td>Ibadan</td><td>2 days</td><td>₦800K</td></tr>
+                    <tr><td>3</td><td>Abuja</td><td>4 days</td><td>₦1.5M</td></tr>
+                    <tr><td>4</td><td>Port Harcourt</td><td>3 days</td><td>₦1M</td></tr>
+                    <tr><td>5</td><td>Enugu</td><td>2 days</td><td>₦800K</td></tr>
+                    <tr><td>6</td><td>Onitsha</td><td>2 days</td><td>₦800K</td></tr>
+                    <tr><td>7</td><td>Aba</td><td>2 days</td><td>₦600K</td></tr>
+                    <tr><td colspan="3"><strong>Total Roadshow Budget</strong></td><td><strong>₦7.5M</strong></td></tr>
+                </tbody>
+            </table>
+
+            <h3>Roadshow-Exclusive Offers</h3>
+            <ul class="styled-list">
+                <li>15% discount on all products</li>
+                <li>"First 50 buyers" free power bank with ₦20K+ purchase</li>
+                <li>Free branded merchandise (t-shirts, caps, stickers)</li>
+                <li>Referral program sign-up with instant ₦500 credit</li>
+            </ul>
+
+            <div class="callout">
+                <div class="callout-title">Roadshow Staffing</div>
+                <p>1 Roadshow Manager + 3 Product Demonstrators + 2 Sales Staff + 1 Social Media Lead + 1 Driver + 1 Local Coordinator per city. Total: 9 core + 7 local coordinators.</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="retail">
+            <h2><span>08</span> Retail Expansion Strategy</h2>
+            <table class="data-table">
+                <thead><tr><th>Phase</th><th>Timeline</th><th>Target</th><th>Key Partners</th></tr></thead>
+                <tbody>
+                    <tr><td>Phase 1</td><td>Month 1-2</td><td>10 retail points</td><td>Slot (5), Jumia, Konga, 3 Computer Village dealers</td></tr>
+                    <tr><td>Phase 2</td><td>Month 3-4</td><td>50 retail points</td><td>Add SPAR, Pointek, campus shops</td></tr>
+                    <tr><td>Phase 3</td><td>Month 5-6</td><td>100+ retail points</td><td>Nationwide expansion, mall kiosks</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Mall Kiosk Program</h3>
+            <p>Target: Ikeja City Mall, Lekki Mall, Shoprite (3 cities), Novare Mall (2 cities), Jara Mall, The Palms (2 cities)</p>
+            <ul class="styled-list">
+                <li>3m x 3m branded kiosk with full product display</li>
+                <li>Demo units for hands-on testing</li>
+                <li>QR code for online follow + referral sign-up</li>
+                <li>2 staff per kiosk (trained sales + demo specialist)</li>
+            </ul>
+        </section>
+
+        <section class="content-section" id="grassroots">
+            <h2><span>09</span> Grassroots Community Marketing</h2>
+
+            <h3>Barbershop & Salon Network</h3>
+            <p>Barbershops are Nigeria's unofficial community centers. Men spend 1-2 hours weekly here.</p>
+            <ul class="styled-list">
+                <li>Distribute 500 branded mirrors/posters to barbershops in Lagos</li>
+                <li>Free earbuds sample with every barbershop partnership</li>
+                <li>Barbers earn 15% commission on earbuds and hand fan sales</li>
+                <li>Monthly "Barber of the Month" feature on Mikorean social media</li>
+            </ul>
+
+            <h3>Church & Religious Organization Partnerships</h3>
+            <ul class="styled-list">
+                <li>Sponsor charging stations at church conferences (100K+ attendance)</li>
+                <li>Gift power banks to pastors and church leaders</li>
+                <li>December carol charging booths</li>
+                <li>Target: 20 churches Lagos, 10 Abuja, 5 PH</li>
+            </ul>
+
+            <h3>POS Agent Network</h3>
+            <ul class="styled-list">
+                <li>Partner with 200 POS agents across Lagos, Abuja, PH</li>
+                <li>20% commission on referred sales</li>
+                <li>Branded POS terminal stickers</li>
+                <li>Free power bank for every 10 referrals</li>
+            </ul>
+
+            <h3>Okada / Keke NAPEP Branding</h3>
+            <p>Okada and keke riders are mobile billboards reaching millions daily. Low cost, high visibility.</p>
+            <ul class="styled-list">
+                <li>Branded stickers on 500 okada/keke in Lagos</li>
+                <li>"Mikorean — E Go Last" messaging</li>
+                <li>QR code for WhatsApp follow</li>
+                <li>Budget: ₦100K for stickers + ₦50K for rider incentives</li>
+            </ul>
+        </section>
+
+        <section class="content-section" id="seasonal">
+            <h2><span>10</span> Seasonal Campaigns</h2>
+            <table class="data-table">
+                <thead><tr><th>Season</th><th>Campaign</th><th>Products Focus</th><th>Budget</th></tr></thead>
+                <tbody>
+                    <tr><td>Back to School (Sept)</td><td>"Student Survival Kit"</td><td>Earbuds, power banks, cables, stands</td><td>₦2M</td></tr>
+                    <tr><td>Christmas (Dec)</td><td>"12 Days of MIKOREAN"</td><td>Full range, gift bundles</td><td>₦3M</td></tr>
+                    <tr><td>New Year (Jan)</td><td>"New Year, New Gadgets"</td><td>Smart watches, smart glasses</td><td>₦1.5M</td></tr>
+                    <tr><td>Valentine's (Feb)</td><td>"Gift of Sound"</td><td>Earbuds, headsets</td><td>₦1M</td></tr>
+                    <tr><td>Hot Season (Mar-Jul)</td><td>"Cool Down"</td><td>Rechargeable hand fans</td><td>₦2M</td></tr>
+                    <tr><td>Independence Day (Oct)</td><td>"Nigerian-Made Quality"</td><td>Full range, brand story</td><td>₦1.5M</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Ember Season Strategy (October-December)</h3>
+            <ul class="styled-list">
+                <li>October: Roadshow Phase 2 (5 cities) + corporate gifting pipeline push + mall kiosk setup</li>
+                <li>November: Black Friday flash sales + "Gift Guide" content + church conference charging stations</li>
+                <li>December: Full mall kiosk deployment (6 malls) + "12 Days of MIKOREAN" + church carols + year-end corporate delivery</li>
+            </ul>
+        </section>
+
+        <section class="content-section" id="budget">
+            <h2><span>11</span> Budget & KPIs</h2>
+            <h3>6-Month Offline Marketing Budget</h3>
+            <table class="data-table">
+                <thead><tr><th>Category</th><th>Month 1</th><th>Month 3</th><th>Month 6</th><th>Total</th></tr></thead>
+                <tbody>
+                    <tr><td>Market Activations</td><td>₦1.5M</td><td>₦1M</td><td>₦800K</td><td>₦7M</td></tr>
+                    <tr><td>Campus Tour</td><td>₦500K</td><td>₦1M</td><td>₦500K</td><td>₦4M</td></tr>
+                    <tr><td>Mechanic/Transport</td><td>₦300K</td><td>₦200K</td><td>₦200K</td><td>₦1.5M</td></tr>
+                    <tr><td>Corporate Gifting</td><td>₦500K</td><td>₦2M</td><td>₦3M</td><td>₦8M</td></tr>
+                    <tr><td>Event Sponsorships</td><td>₦1M</td><td>₦2M</td><td>₦3M</td><td>₦12M</td></tr>
+                    <tr><td>Roadshow</td><td>—</td><td>₦3M</td><td>₦4.5M</td><td>₦7.5M</td></tr>
+                    <tr><td>Retail Expansion</td><td>₦2M</td><td>₦1.5M</td><td>₦1M</td><td>₦8M</td></tr>
+                    <tr><td>Grassroots</td><td>₦500K</td><td>₦500K</td><td>₦500K</td><td>₦3M</td></tr>
+                    <tr><td><strong>TOTAL</strong></td><td><strong>₦6.3M</strong></td><td><strong>₦11.2M</strong></td><td><strong>₦13.5M</strong></td><td><strong>₦51M</strong></td></tr>
+                </tbody>
+            </table>
+
+            <h3>Key Performance Indicators</h3>
+            <div class="bar-chart">
+                <div class="bar-row">
+                    <span class="bar-label">Month 1 Reach</span>
+                    <div class="bar-track"><div class="bar-fill blue" data-width="10">50,000</div></div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Month 3 Reach</span>
+                    <div class="bar-track"><div class="bar-fill blue" data-width="40">200,000</div></div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Month 6 Reach</span>
+                    <div class="bar-track"><div class="bar-fill blue" data-width="100">500,000+</div></div>
+                </div>
+            </div>
+
+            <div class="callout">
+                <div class="callout-title">Month 6 Targets</div>
+                <p>100+ retail points, 100 active campus ambassadors, 10+ corporate deals closed, 7 roadshow cities completed, 500,000+ people reached offline, offline revenue contributing 40% of total sales.</p>
+            </div>
+        </section>
+    </div>
+
+    <footer class="report-footer">
+        <div class="footer-nav">
+            <a href="report-competitor-analysis.html">
+                <span class="label">&larr; Previous</span>
+                <span class="title">Competitor Analysis</span>
+            </a>
+            <a href="index.html">
+                <span class="label">Back to &rarr;</span>
+                <span class="title">Portfolio Overview</span>
+            </a>
+        </div>
+    </footer>
+
+    <div class="credit-footer">
+        <p><strong>Prepared by Henry Ofido</strong> — Brand and Marketing Strategist</p>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.from('.report-hero > *', { opacity: 0, y: 30, duration: 0.8, stagger: 0.15, delay: 0.3 });
+        gsap.from('.metric-card', { scrollTrigger: { trigger: '.metrics-grid', start: 'top 85%' }, opacity: 0, y: 20, duration: 0.6, stagger: 0.1 });
+        gsap.from('.content-section', { scrollTrigger: { trigger: '.report-content', start: 'top 80%' }, opacity: 0, y: 30, duration: 0.8, stagger: 0.2 });
+
+        document.querySelectorAll('.bar-fill').forEach(bar => {
+            const w = bar.dataset.width;
+            bar.style.width = '0%';
+            ScrollTrigger.create({
+                trigger: bar, start: 'top 90%',
+                onEnter: () => { gsap.to(bar, { width: w + '%', duration: 1.2, ease: 'power2.out' }); },
+                once: true
+            });
+        });
+    </script>
+</body>
+</html>

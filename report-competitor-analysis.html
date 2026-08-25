@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competitor Analysis — MIKOREAN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --grey-900: #1a1a1a; --grey-800: #2d2d2d; --grey-700: #4a4a4a;
+            --grey-600: #666666; --white: #ffffff; --off-white: #f5f5f5;
+            --black: #000000; --dark: #111111; --accent: #00D4FF;
+            --accent-glow: rgba(0,212,255,0.3); --accent-dim: rgba(0,212,255,0.1);
+            --green: #22c55e; --red: #ef4444; --yellow: #f59e0b;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+        .report-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(20px); background: rgba(17,17,17,0.85); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .back-link { display: flex; align-items: center; gap: 0.5rem; color: var(--grey-600); text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
+        .back-link:hover { color: var(--accent); }
+        .back-link svg { width: 16px; height: 16px; }
+        .nav-logo { font-weight: 800; font-size: 1rem; letter-spacing: 0.1em; }
+        .nav-logo span { color: var(--accent); }
+        .report-hero { min-height: 60vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 2rem 4rem; max-width: 900px; margin: 0 auto; }
+        .report-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; }
+        .report-hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1.5rem; }
+        .report-meta { display: flex; gap: 2rem; color: var(--grey-600); font-size: 0.85rem; flex-wrap: wrap; }
+        .report-meta strong { color: var(--white); font-weight: 600; }
+        .report-content { max-width: 900px; margin: 0 auto; padding: 0 2rem 6rem; }
+        .toc { background: rgba(45,45,45,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 2rem; margin-bottom: 4rem; }
+        .toc h3 { font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+        .toc-list { list-style: none; columns: 2; column-gap: 2rem; }
+        .toc-list li { padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); break-inside: avoid; }
+        .toc-list a { color: var(--grey-600); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; display: flex; gap: 0.75rem; }
+        .toc-list a:hover { color: var(--accent); }
+        .toc-num { color: var(--grey-700); font-weight: 600; min-width: 1.5rem; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; overflow: hidden; margin-bottom: 4rem; }
+        .metric-card { padding: 2rem; text-align: center; background: var(--dark); }
+        .metric-value { font-size: 2rem; font-weight: 800; color: var(--accent); margin-bottom: 0.5rem; }
+        .metric-label { font-size: 0.75rem; color: var(--grey-600); letter-spacing: 0.1em; text-transform: uppercase; }
+        .content-section { margin-bottom: 4rem; }
+        .content-section h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.02em; }
+        .content-section h2 span { color: var(--accent); }
+        .content-section h3 { font-size: 1.2rem; font-weight: 700; margin: 2rem 0 1rem; color: var(--off-white); }
+        .content-section p { color: var(--grey-600); margin-bottom: 1.25rem; line-height: 1.7; }
+        .data-table { width: 100%; border-collapse: collapse; margin: 2rem 0; background: rgba(45,45,45,0.2); border-radius: 12px; overflow: hidden; }
+        .data-table th { text-align: left; padding: 1rem 1.25rem; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); background: rgba(0,212,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .data-table td { padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--grey-600); font-size: 0.9rem; }
+        .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+        .callout { background: rgba(0,212,255,0.05); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: 1.5rem 2rem; margin: 2rem 0; }
+        .callout-title { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+        .callout p { color: var(--grey-600); margin: 0; }
+        .styled-list { list-style: none; margin: 1.5rem 0; }
+        .styled-list li { padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--grey-600); display: flex; gap: 0.75rem; align-items: flex-start; }
+        .styled-list li::before { content: '\2192'; color: var(--accent); font-weight: 600; flex-shrink: 0; }
+        /* SWOT Grid */
+        .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+        .swot-card { background: rgba(45,45,45,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1.5rem; }
+        .swot-card h4 { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; font-weight: 700; }
+        .swot-card.strength h4 { color: var(--green); }
+        .swot-card.weakness h4 { color: var(--red); }
+        .swot-card.opportunity h4 { color: var(--accent); }
+        .swot-card.threat h4 { color: var(--yellow); }
+        .swot-card ul { list-style: none; }
+        .swot-card ul li { padding: 0.4rem 0; color: var(--grey-600); font-size: 0.85rem; line-height: 1.5; }
+        .swot-card ul li::before { content: '\2022'; color: var(--grey-700); margin-right: 0.5rem; }
+        .competitor-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .competitor-name { font-size: 1.4rem; font-weight: 800; }
+        .competitor-badge { font-size: 0.7rem; padding: 0.25rem 0.75rem; border-radius: 100px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+        .badge-primary { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+        .badge-secondary { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+        .badge-premium { background: rgba(139,92,246,0.1); color: #8b5cf6; border: 1px solid rgba(139,92,246,0.2); }
+        .badge-value { background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.2); }
+        .badge-niche { background: rgba(107,114,128,0.1); color: #9ca3af; border: 1px solid rgba(107,114,128,0.2); }
+        .report-footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 3rem 2rem; max-width: 900px; margin: 0 auto; }
+        .footer-nav { display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+        .footer-nav a { color: var(--grey-600); text-decoration: none; font-size: 0.85rem; padding: 1rem 1.5rem; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; transition: all 0.3s; flex: 1; min-width: 200px; }
+        .footer-nav a:hover { border-color: var(--accent); color: var(--accent); }
+        .footer-nav .label { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-bottom: 0.25rem; color: var(--grey-700); }
+        .footer-nav .title { font-weight: 600; color: var(--white); }
+        .credit-footer { text-align: center; padding: 3rem 2rem; border-top: 1px solid rgba(255,255,255,0.03); margin-top: 3rem; }
+        .credit-footer p { font-size: 0.8rem; color: var(--grey-700); }
+        .credit-footer strong { color: var(--white); }
+        @media (max-width: 768px) { .toc-list { columns: 1; } .swot-grid { grid-template-columns: 1fr; } .report-hero { padding: 7rem 1.25rem 3rem; } .report-content { padding: 0 1.25rem 4rem; } .report-nav { padding: 0.75rem 1.25rem; } }
+        @media print { .report-nav { display: none; } body { background: white; color: black; } }
+    </style>
+</head>
+<body>
+    <nav class="report-nav">
+        <a href="index.html" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back to Portfolio
+        </a>
+        <div class="nav-logo">MIKO<span>REAN</span></div>
+    </nav>
+
+    <section class="report-hero">
+        <div class="report-label">Report 22 of 23</div>
+        <h1>Competitor Analysis</h1>
+        <div class="report-meta">
+            <span>Prepared by <strong>Henry Ofido</strong></span>
+            <span>Brand and Marketing Strategist</span>
+            <span>August 2026</span>
+        </div>
+    </section>
+
+    <div class="report-content">
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul class="toc-list">
+                <li><a href="#overview"><span class="toc-num">01</span> Market Overview</a></li>
+                <li><a href="#oraimo"><span class="toc-num">02</span> Oraimo (Primary)</a></li>
+                <li><a href="#xiaomi"><span class="toc-num">03</span> Xiaomi Nigeria</a></li>
+                <li><a href="#anker"><span class="toc-num">04</span> Anker Nigeria</a></li>
+                <li><a href="#baseus"><span class="toc-num">05</span> Baseus Nigeria</a></li>
+                <li><a href="#others"><span class="toc-num">06</span> Samsung, Tecno, Infinix, Romoss</a></li>
+                <li><a href="#whitespace"><span class="toc-num">07</span> White-Space Opportunities</a></li>
+                <li><a href="#pricing"><span class="toc-num">08</span> Pricing Benchmarks</a></li>
+            </ul>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value">8</div>
+                <div class="metric-label">Competitors Analyzed</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">5</div>
+                <div class="metric-label">White-Space Categories</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">4</div>
+                <div class="metric-label">SWOT per Competitor</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">6</div>
+                <div class="metric-label">Exploitable Weaknesses</div>
+            </div>
+        </div>
+
+        <section class="content-section" id="overview">
+            <h2><span>01</span> Market Overview</h2>
+            <p>Nigeria's tech accessories market is dominated by Oraimo with aggressive multi-platform presence and 200+ retail partnerships. Xiaomi has strong brand awareness but weak accessories focus. Anker is premium-priced with minimal local presence. Baseus and Romoss have near-zero social engagement. Samsung and Tecno/Infinix treat accessories as phone afterthoughts.</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr><th>Competitor</th><th>Parent</th><th>Position</th><th>Price</th><th>X Followers</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Oraimo</td><td>Transsion Holdings</td><td>#1 Market Leader</td><td>Mid-range</td><td>~150-180K</td></tr>
+                    <tr><td>Xiaomi NG</td><td>Xiaomi Corp</td><td>#2 Brand Awareness</td><td>Budget-Mid</td><td>112K</td></tr>
+                    <tr><td>Anker NG</td><td>Anker Innovations</td><td>#3 Premium</td><td>Premium</td><td>~10K</td></tr>
+                    <tr><td>Baseus NG</td><td>Baseus Technology</td><td>#4 Value</td><td>Budget</td><td>&lt;5K</td></tr>
+                    <tr><td>Samsung NG</td><td>Samsung Electronics</td><td>#6 Premium (phones)</td><td>Premium</td><td>~200K</td></tr>
+                    <tr><td>Tecno NG</td><td>Transsion Holdings</td><td>#7 Budget (phones)</td><td>Budget</td><td>~150K</td></tr>
+                    <tr><td>Infinix NG</td><td>Transsion Holdings</td><td>#8 Mid (phones)</td><td>Budget-Mid</td><td>~100K</td></tr>
+                    <tr><td>Romoss</td><td>Romoss Technology</td><td>#5 Niche</td><td>Budget</td><td>&lt;2K</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section" id="oraimo">
+            <h2><span>02</span> Oraimo — Primary Competitor</h2>
+            <div class="competitor-header">
+                <span class="competitor-name">Oraimo</span>
+                <span class="competitor-badge badge-primary">#1 Market Leader</span>
+            </div>
+            <p>Transsion subsidiary with 200M+ users across 60+ countries. 365-day warranty, nationwide service centers. Dominates social media with 370K+ TikTok followers and 150-180K X followers. Key campaigns: SpaceBuds 2 with Mavo, 26-day nationwide roadshow, Burna Boy partnership.</p>
+
+            <div class="swot-grid">
+                <div class="swot-card strength">
+                    <h4>Strengths</h4>
+                    <ul>
+                        <li>Market leader with 200M+ users across 60+ countries</li>
+                        <li>Transsion backing (Tecno/Infinix/itel ecosystem)</li>
+                        <li>365-day warranty + nationwide service centers</li>
+                        <li>Deep retail: Jumia, Konga, Slot, street vendors</li>
+                        <li>Cultural integration: music, BBNaija, lifestyle</li>
+                        <li>3-5 posts/day on X, daily TikTok/IG content</li>
+                        <li>24 coordinated accounts across Africa</li>
+                    </ul>
+                </div>
+                <div class="swot-card weakness">
+                    <h4>Weaknesses</h4>
+                    <ul>
+                        <li>Counterfeit product flooding — #1 trust issue</li>
+                        <li>Quality perception declining: "buy, break, replace"</li>
+                        <li>Smart glasses category completely absent</li>
+                        <li>Phone stands/holders not core focus</li>
+                        <li>No rechargeable hand fans in catalogue</li>
+                        <li>No solar/eco-friendly charging products</li>
+                        <li>Home/baby tech expansion diluting focus</li>
+                    </ul>
+                </div>
+                <div class="swot-card opportunity">
+                    <h4>Opportunities</h4>
+                    <ul>
+                        <li>Expanding into home and baby tech (Innovation Gala 2026)</li>
+                        <li>Growing music artist partnerships</li>
+                        <li>African expansion via Transsion network</li>
+                        <li>TikTok Shop integration potential</li>
+                    </ul>
+                </div>
+                <div class="swot-card threat">
+                    <h4>Threats to Mikorean</h4>
+                    <ul>
+                        <li>Aggressive counter-attack on pricing</li>
+                        <li>Existing retail dominance hard to displace</li>
+                        <li>Deep pockets for influencer marketing</li>
+                        <li>Established warranty trust with consumers</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="callout">
+                <div class="callout-title">Mikorean Attack Strategy</div>
+                <p>Target Oraimo's counterfeit trust gap with QR verification system. Own smart glasses, hand fans, and phone stands — categories they ignore. Counter the "buy, break, replace" narrative with durability proof content.</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="xiaomi">
+            <h2><span>03</span> Xiaomi Nigeria</h2>
+            <div class="competitor-header">
+                <span class="competitor-name">Xiaomi Nigeria</span>
+                <span class="competitor-badge badge-secondary">#2 Brand Awareness</span>
+            </div>
+            <p>112K X followers with 7 years of history. Posting 3.1 times/day but low engagement. Product-spec heavy content lacking lifestyle storytelling. Smart glasses mentioned globally but not pushed in Nigeria.</p>
+
+            <div class="swot-grid">
+                <div class="swot-card strength">
+                    <h4>Strengths</h4>
+                    <ul>
+                        <li>Strong global brand recognition</li>
+                        <li>112K X followers — decent reach</li>
+                        <li>Wide product ecosystem</li>
+                        <li>Competitive pricing (budget-mid range)</li>
+                        <li>Manufacturing scale advantage</li>
+                    </ul>
+                </div>
+                <div class="swot-card weakness">
+                    <h4>Weaknesses</h4>
+                    <ul>
+                        <li>Product-spec heavy, lacking lifestyle storytelling</li>
+                        <li>Low engagement relative to follower count</li>
+                        <li>No Nigerian cultural integration</li>
+                        <li>Accessories treated as phone add-ons</li>
+                        <li>No dedicated Nigerian content team</li>
+                    </ul>
+                </div>
+                <div class="swot-card opportunity">
+                    <h4>Opportunities</h4>
+                    <ul>
+                        <li>Expanding Nigerian retail presence</li>
+                        <li>Growing smartphone market share</li>
+                        <li>Ecosystem lock-in potential</li>
+                    </ul>
+                </div>
+                <div class="swot-card threat">
+                    <h4>Threats to Mikorean</h4>
+                    <ul>
+                        <li>Strong brand recognition may overshadow newcomer</li>
+                        <li>Price competition from manufacturing scale</li>
+                        <li>Retail shelf space争夺</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="callout">
+                <div class="callout-title">Mikorean Attack Strategy</div>
+                <p>Position as "accessories-first" brand vs. Xiaomi's phone-first approach. Out-create on Nigerian cultural content. Target car chargers, phone stands, hand fans — categories Xiaomi ignores entirely.</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="anker">
+            <h2><span>04</span> Anker Nigeria</h2>
+            <div class="competitor-header">
+                <span class="competitor-name">Anker Nigeria</span>
+                <span class="competitor-badge badge-premium">#3 Premium</span>
+            </div>
+            <p>Global #1 in charging. 208K global X followers but minimal Nigerian presence. New distributor (Alfa by Etisal, May 2026). 45% share of voice in charging category globally, but negative sentiment on YouTube (~30%) and Reddit (~28%).</p>
+
+            <div class="swot-grid">
+                <div class="swot-card strength">
+                    <h4>Strengths</h4>
+                    <ul>
+                        <li>Global #1 in charging accessories</li>
+                        <li>208K global X followers</li>
+                        <li>45% share of voice in charging</li>
+                        <li>Strong R&D and GaN technology</li>
+                        <li>Quality reputation globally</li>
+                    </ul>
+                </div>
+                <div class="swot-card weakness">
+                    <h4>Weaknesses</h4>
+                    <ul>
+                        <li>Premium pricing vs. Nigerian price sensitivity</li>
+                        <li>Minimal local content creation</li>
+                        <li>No music/cultural partnerships in Nigeria</li>
+                        <li>Smart glasses not in Nigerian market</li>
+                        <li>Recurring complaints: overheating, compatibility</li>
+                    </ul>
+                </div>
+                <div class="swot-card opportunity">
+                    <h4>Opportunities</h4>
+                    <ul>
+                        <li>New Nigeria distributor (Alfa by Etisal)</li>
+                        <li>Growing premium segment in Lagos/Abuja</li>
+                        <li>B2B/corporate gifting potential</li>
+                    </ul>
+                </div>
+                <div class="swot-card threat">
+                    <h4>Threats to Mikorean</h4>
+                    <ul>
+                        <li>Quality reputation sets high bar</li>
+                        <li>New distributor may accelerate Nigerian presence</li>
+                        <li>Premium positioning attracts affluent segment</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="callout">
+                <div class="callout-title">Mikorean Attack Strategy</div>
+                <p>"Anker quality at Nigerian prices." Attack on price-performance ratio. Car chargers and hand fans unaddressed. Anker's Nigerian social presence is minimal — low bar to surpass.</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="baseus">
+            <h2><span>05</span> Baseus Nigeria</h2>
+            <div class="competitor-header">
+                <span class="competitor-name">Baseus Nigeria</span>
+                <span class="competitor-badge badge-value">#4 Value</span>
+            </div>
+            <p>Almost zero X/Twitter presence. Product range: cables, chargers, power banks, earbuds, keyboards. Pricing ₦5,900-₦79,900. No content creator partnerships visible. No Nigerian cultural content.</p>
+
+            <div class="swot-grid">
+                <div class="swot-card strength">
+                    <h4>Strengths</h4>
+                    <ul>
+                        <li>Competitive pricing (budget segment)</li>
+                        <li>Wide product range</li>
+                        <li>Established online presence (baseus.com.ng)</li>
+                        <li>Strong car charger category</li>
+                    </ul>
+                </div>
+                <div class="swot-card weakness">
+                    <h4>Weaknesses</h4>
+                    <ul>
+                        <li>Almost zero X/Twitter presence</li>
+                        <li>No content creator partnerships</li>
+                        <li>No Nigerian cultural content</li>
+                        <li>No lifestyle branding</li>
+                        <li>Limited warranty/support infrastructure</li>
+                    </ul>
+                </div>
+                <div class="swot-card opportunity">
+                    <h4>Opportunities</h4>
+                    <ul>
+                        <li>Growing online shopping in Nigeria</li>
+                        <li>Price-sensitive market alignment</li>
+                    </ul>
+                </div>
+                <div class="swot-card threat">
+                    <h4>Threats to Mikorean</h4>
+                    <ul>
+                        <li>Low pricing pressure on margins</li>
+                        <li>E-commerce dominance in budget segment</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="callout">
+                <div class="callout-title">Mikorean Attack Strategy</div>
+                <p>Baseus is a ghost on X — easy to outpace on social. Challenge their car charger dominance. Phone accessories (stands, holders) not their focus. Build brand where they have none.</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="others">
+            <h2><span>06</span> Other Competitors</h2>
+
+            <h3>Samsung Nigeria</h3>
+            <div class="competitor-header">
+                <span class="competitor-name">Samsung Nigeria</span>
+                <span class="competitor-badge badge-premium">Premium (Phones)</span>
+            </div>
+            <p>601K Instagram followers but 0.02% engagement rate — abysmal. Accessories are afterthought to phones/TVs. Premium pricing excludes 80% of Nigerian market.</p>
+            <div class="swot-grid">
+                <div class="swot-card strength"><h4>Strengths</h4><ul><li>Massive brand recognition</li><li>600K+ IG followers</li><li>Premium quality perception</li></ul></div>
+                <div class="swot-card weakness"><h4>Weaknesses</h4><ul><li>Terrible engagement (0.02%)</li><li>Accessories afterthought</li><li>Premium pricing excludes mass market</li><li>No standalone accessories strategy</li></ul></div>
+                <div class="swot-card opportunity"><h4>Opportunities</h4><ul><li>Galaxy Buds ecosystem</li><li>Corporate B2B channels</li></ul></div>
+                <div class="swot-card threat"><h4>Threats</h4><ul><li>Brand recognition may attract loyalists</li><li>Corporate relationship advantages</li></ul></div>
+            </div>
+
+            <h3>Tecno Nigeria</h3>
+            <div class="competitor-header">
+                <span class="competitor-name">Tecno Nigeria</span>
+                <span class="competitor-badge badge-niche">Budget (Phones)</span>
+            </div>
+            <p>17.22% mobile market share. Accessories bundled with phones, not standalone. TPB-P204 power bank at ₦18,500. No dedicated accessories marketing.</p>
+            <div class="swot-grid">
+                <div class="swot-card strength"><h4>Strengths</h4><ul><li>17% mobile market share</li><li>Transsion ecosystem</li><li>Massive retail network</li></ul></div>
+                <div class="swot-card weakness"><h4>Weaknesses</h4><ul><li>Accessories phone-bundled</li><li>No standalone marketing</li><li>No accessories brand identity</li></ul></div>
+                <div class="swot-card opportunity"><h4>Opportunities</h4><ul><li>Phone-to-accessories cross-sell</li></ul></div>
+                <div class="swot-card threat"><h4>Threats</h4><ul><li>Oraimo cannibalizing within same parent</li></ul></div>
+            </div>
+
+            <h3>Infinix Nigeria</h3>
+            <div class="competitor-header">
+                <span class="competitor-name">Infinix Nigeria</span>
+                <span class="competitor-badge badge-niche">Mid (Phones)</span>
+            </div>
+            <p>15.07% mobile market share. Same Transsion parent as Oraimo. Youth-focused but accessories bundled, not standalone.</p>
+            <div class="swot-grid">
+                <div class="swot-card strength"><h4>Strengths</h4><ul><li>15% mobile market share</li><li>Youth-focused brand</li><li>Transsion ecosystem</li></ul></div>
+                <div class="swot-card weakness"><h4>Weaknesses</h4><ul><li>Accessories bundled, not standalone</li><li>Limited X/Twitter accessories content</li><li>Oraimo gets accessories priority</li></ul></div>
+                <div class="swot-card opportunity"><h4>Opportunities</h4><ul><li>Youth market alignment</li></ul></div>
+                <div class="swot-card threat"><h4>Threats</h4><ul><li>Oraimo dominance in same ecosystem</li></ul></div>
+            </div>
+
+            <h3>Romoss</h3>
+            <div class="competitor-header">
+                <span class="competitor-name">Romoss</span>
+                <span class="competitor-badge badge-niche">Niche</span>
+            </div>
+            <p>Power banks only. GITEX Africa 2025 showcase. Near-zero social media presence. Budget positioning.</p>
+            <div class="swot-grid">
+                <div class="swot-card strength"><h4>Strengths</h4><ul><li>Known for power bank capacity</li><li>Competitive pricing</li></ul></div>
+                <div class="swot-card weakness"><h4>Weaknesses</h4><ul><li>Single-category brand</li><li>Zero social media engagement</li><li>No Nigerian market strategy</li></ul></div>
+                <div class="swot-card opportunity"><h4>Opportunities</h4><ul><li>Growing power bank demand</li></ul></div>
+                <div class="swot-card threat"><h4>Threats</h4><ul><li>Full-range competitors outperform</li></ul></div>
+            </div>
+        </section>
+
+        <section class="content-section" id="whitespace">
+            <h2><span>07</span> White-Space Opportunities</h2>
+            <p>Five categories where NO competitor has meaningful presence in Nigeria:</p>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Category</th><th>Competition</th><th>Mikorean Strategy</th><th>Target Price</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Smart Glasses</td><td style="color:var(--green);">ZERO</td><td>First-mover: audio + UV protection</td><td>₦25K-₦60K</td></tr>
+                    <tr><td>Rechargeable Hand Fans</td><td style="color:var(--green);">ZERO</td><td>Seasonal dominance (Mar-Jul)</td><td>₦5K-₦12K</td></tr>
+                    <tr><td>Phone Stands</td><td style="color:var(--green);">NEAR ZERO</td><td>"Nigerian desk essentials"</td><td>₦2K-₦5K</td></tr>
+                    <tr><td>Phone Holders</td><td style="color:var(--green);">NEAR ZERO</td><td>Car/desk dual-use</td><td>₦2K-₦5K</td></tr>
+                    <tr><td>Tablet/Laptop Stands</td><td style="color:var(--green);">NEAR ZERO</td><td>WFH professional positioning</td><td>₦3K-₦8K</td></tr>
+                </tbody>
+            </table>
+
+            <div class="callout">
+                <div class="callout-title">Key Insight</div>
+                <p>Smart glasses and rechargeable hand fans have NO established Nigerian pricing — Mikorean can set the market. Phone/laptop stands are near-white-space with WFH-driven sustained demand.</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="pricing">
+            <h2><span>08</span> Pricing Benchmarks</h2>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Product</th><th>Oraimo</th><th>Anker</th><th>Baseus</th><th>Xiaomi</th><th>Mikorean Target</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>10K mAh Power Bank</td><td>₦12K-₦18K</td><td>₦18K-₦25K</td><td>₦13.9K-₦15.9K</td><td>₦12K-₦16K</td><td style="color:var(--accent);">₦10K-₦15K</td></tr>
+                    <tr><td>TWS Earbuds</td><td>₦12K-₦35K</td><td>₦20K-₦40K</td><td>₦17K</td><td>₦10K-₦25K</td><td style="color:var(--accent);">₦9K-₦20K</td></tr>
+                    <tr><td>Wall Charger</td><td>₦4K-₦10K</td><td>₦8K-₦15K</td><td>₦7.9K</td><td>₦5K-₦10K</td><td style="color:var(--accent);">₦3.5K-₦8K</td></tr>
+                    <tr><td>Smart Watch</td><td>₦20K-₦50K</td><td>N/A</td><td>N/A</td><td>₦25K-₦45K</td><td style="color:var(--accent);">₦18K-₦40K</td></tr>
+                    <tr><td>Smart Glasses</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td style="color:var(--accent);">₦25K-₦60K (First mover)</td></tr>
+                    <tr><td>Hand Fan</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td style="color:var(--accent);">₦5K-₦12K (First mover)</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <footer class="report-footer">
+        <div class="footer-nav">
+            <a href="report-distributor-referral.html">
+                <span class="label">&larr; Previous</span>
+                <span class="title">Distributor & Referral Program</span>
+            </a>
+            <a href="report-offline-marketing.html">
+                <span class="label">Next Report &rarr;</span>
+                <span class="title">Offline Marketing Strategies</span>
+            </a>
+        </div>
+    </footer>
+
+    <div class="credit-footer">
+        <p><strong>Prepared by Henry Ofido</strong> — Brand and Marketing Strategist</p>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.from('.report-hero > *', { opacity: 0, y: 30, duration: 0.8, stagger: 0.15, delay: 0.3 });
+        gsap.from('.metric-card', { scrollTrigger: { trigger: '.metrics-grid', start: 'top 85%' }, opacity: 0, y: 20, duration: 0.6, stagger: 0.1 });
+        gsap.from('.content-section', { scrollTrigger: { trigger: '.report-content', start: 'top 80%' }, opacity: 0, y: 30, duration: 0.8, stagger: 0.2 });
+    </script>
+</body>
+</html>

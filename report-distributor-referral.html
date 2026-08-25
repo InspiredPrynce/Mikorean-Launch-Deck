@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributor & Referral Program — MIKOREAN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --grey-900: #1a1a1a; --grey-800: #2d2d2d; --grey-700: #4a4a4a;
+            --grey-600: #666666; --white: #ffffff; --off-white: #f5f5f5;
+            --black: #000000; --dark: #111111; --accent: #00D4FF;
+            --accent-glow: rgba(0,212,255,0.3); --accent-dim: rgba(0,212,255,0.1);
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white);
+            -webkit-font-smoothing: antialiased; line-height: 1.6;
+        }
+        .report-nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(20px); background: rgba(17,17,17,0.85);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .back-link {
+            display: flex; align-items: center; gap: 0.5rem;
+            color: var(--grey-600); text-decoration: none; font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--accent); }
+        .back-link svg { width: 16px; height: 16px; }
+        .nav-logo { font-weight: 800; font-size: 1rem; letter-spacing: 0.1em; }
+        .nav-logo span { color: var(--accent); }
+        .report-hero {
+            min-height: 60vh; display: flex; flex-direction: column; justify-content: center;
+            padding: 8rem 2rem 4rem; max-width: 900px; margin: 0 auto;
+        }
+        .report-label {
+            font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+        }
+        .report-hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; letter-spacing: -0.03em;
+            line-height: 1.1; margin-bottom: 1.5rem;
+        }
+        .report-meta {
+            display: flex; gap: 2rem; color: var(--grey-600); font-size: 0.85rem; flex-wrap: wrap;
+        }
+        .report-meta strong { color: var(--white); font-weight: 600; }
+        .report-content { max-width: 900px; margin: 0 auto; padding: 0 2rem 6rem; }
+        .toc {
+            background: rgba(45,45,45,0.3); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px; padding: 2rem; margin-bottom: 4rem;
+        }
+        .toc h3 {
+            font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 1.25rem;
+        }
+        .toc-list { list-style: none; columns: 2; column-gap: 2rem; }
+        .toc-list li {
+            padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); break-inside: avoid;
+        }
+        .toc-list a {
+            color: var(--grey-600); text-decoration: none; font-size: 0.9rem;
+            transition: color 0.3s; display: flex; gap: 0.75rem;
+        }
+        .toc-list a:hover { color: var(--accent); }
+        .toc-num { color: var(--grey-700); font-weight: 600; min-width: 1.5rem; }
+        .metrics-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px; overflow: hidden; margin-bottom: 4rem;
+        }
+        .metric-card { padding: 2rem; text-align: center; background: var(--dark); }
+        .metric-value { font-size: 2rem; font-weight: 800; color: var(--accent); margin-bottom: 0.5rem; }
+        .metric-label { font-size: 0.75rem; color: var(--grey-600); letter-spacing: 0.1em; text-transform: uppercase; }
+        .content-section { margin-bottom: 4rem; }
+        .content-section h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.02em; }
+        .content-section h2 span { color: var(--accent); }
+        .content-section h3 { font-size: 1.2rem; font-weight: 700; margin: 2rem 0 1rem; color: var(--off-white); }
+        .content-section p { color: var(--grey-600); margin-bottom: 1.25rem; line-height: 1.7; }
+        .data-table {
+            width: 100%; border-collapse: collapse; margin: 2rem 0;
+            background: rgba(45,45,45,0.2); border-radius: 12px; overflow: hidden;
+        }
+        .data-table th {
+            text-align: left; padding: 1rem 1.25rem;
+            font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--accent); background: rgba(0,212,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .data-table td {
+            padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: var(--grey-600); font-size: 0.9rem;
+        }
+        .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+        .callout {
+            background: rgba(0,212,255,0.05); border-left: 3px solid var(--accent);
+            border-radius: 0 12px 12px 0; padding: 1.5rem 2rem; margin: 2rem 0;
+        }
+        .callout-title {
+            font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem;
+        }
+        .callout p { color: var(--grey-600); margin: 0; }
+        .styled-list { list-style: none; margin: 1.5rem 0; }
+        .styled-list li {
+            padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: var(--grey-600); display: flex; gap: 0.75rem; align-items: flex-start;
+        }
+        .styled-list li::before { content: '\2192'; color: var(--accent); font-weight: 600; flex-shrink: 0; }
+        .tier-card {
+            background: rgba(45,45,45,0.3); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem;
+        }
+        .tier-card h4 { color: var(--accent); font-size: 1rem; margin-bottom: 0.75rem; }
+        .report-footer {
+            border-top: 1px solid rgba(255,255,255,0.05); padding: 3rem 2rem;
+            max-width: 900px; margin: 0 auto;
+        }
+        .footer-nav { display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+        .footer-nav a {
+            color: var(--grey-600); text-decoration: none; font-size: 0.85rem;
+            padding: 1rem 1.5rem; border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px; transition: all 0.3s; flex: 1; min-width: 200px;
+        }
+        .footer-nav a:hover { border-color: var(--accent); color: var(--accent); }
+        .footer-nav .label { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-bottom: 0.25rem; color: var(--grey-700); }
+        .footer-nav .title { font-weight: 600; color: var(--white); }
+        .credit-footer { text-align: center; padding: 3rem 2rem; border-top: 1px solid rgba(255,255,255,0.03); margin-top: 3rem; }
+        .credit-footer p { font-size: 0.8rem; color: var(--grey-700); }
+        .credit-footer strong { color: var(--white); }
+        @media (max-width: 768px) {
+            .toc-list { columns: 1; }
+            .report-hero { padding: 7rem 1.25rem 3rem; }
+            .report-content { padding: 0 1.25rem 4rem; }
+            .report-nav { padding: 0.75rem 1.25rem; }
+        }
+        @media print { .report-nav { display: none; } body { background: white; color: black; } }
+    </style>
+</head>
+<body>
+    <nav class="report-nav">
+        <a href="index.html" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back to Portfolio
+        </a>
+        <div class="nav-logo">MIKO<span>REAN</span></div>
+    </nav>
+
+    <section class="report-hero">
+        <div class="report-label">Report 21 of 23</div>
+        <h1>Distributor & Referral Program</h1>
+        <div class="report-meta">
+            <span>Prepared by <strong>Henry Ofido</strong></span>
+            <span>Brand and Marketing Strategist</span>
+            <span>August 2026</span>
+        </div>
+    </section>
+
+    <div class="report-content">
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul class="toc-list">
+                <li><a href="#exec"><span class="toc-num">01</span> Executive Summary</a></li>
+                <li><a href="#distributor"><span class="toc-num">02</span> Distributor Channel Strategy</a></li>
+                <li><a href="#merchant"><span class="toc-num">03</span> Merchant Channel Strategy</a></li>
+                <li><a href="#referral"><span class="toc-num">04</span> Consumer Referral Program</a></li>
+                <li><a href="#ambassador"><span class="toc-num">05</span> Ambassador Tiers</a></li>
+                <li><a href="#hybrid"><span class="toc-num">06</span> Hybrid Channel Integration</a></li>
+                <li><a href="#budget"><span class="toc-num">07</span> Budget & KPIs</a></li>
+            </ul>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value">200+</div>
+                <div class="metric-label">Retail Partners (Month 6)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">500+</div>
+                <div class="metric-label">Active Ambassadors</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">3</div>
+                <div class="metric-label">Distribution Tiers</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">5.8M</div>
+                <div class="metric-label">Month 1 Budget (₦)</div>
+            </div>
+        </div>
+
+        <section class="content-section" id="exec">
+            <h2><span>01</span> Executive Summary</h2>
+            <p>Nigeria's tech accessories distribution is fragmented across open markets, formal retail, and online marketplaces. Oraimo dominates with 200+ retail partnerships. Mikorean needs a three-pronged approach: formal retail partnerships for credibility, wholesale distribution for coverage, and a consumer referral engine for organic growth.</p>
+
+            <div class="callout">
+                <div class="callout-title">Target</div>
+                <p>50 retail partners Month 1, 200 by Month 6, 500+ active ambassadors generating 25% of total sales by Month 6.</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="distributor">
+            <h2><span>02</span> Distributor Channel Strategy</h2>
+            <h3>Distribution Tiers</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr><th>Tier</th><th>Partners</th><th>Margin</th><th>Payment</th><th>Target (Month 6)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Tier 1 — Direct Retail</td><td>Slot, Jumia, Konga, SPAR, Pointek</td><td>30-35%</td><td>Net 30</td><td>15 partners</td></tr>
+                    <tr><td>Tier 2 — Wholesale</td><td>Computer Village, Onitsha, Wuse II, PH</td><td>35-40%</td><td>Net 15</td><td>10 partners</td></tr>
+                    <tr><td>Tier 3 — Street-Level</td><td>Mall kiosks, campus shops, motor parks, barbershops</td><td>40-45%</td><td>Cash on delivery</td><td>100+ resellers</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Partnership Packages</h3>
+            <div class="tier-card">
+                <h4>Starter Kit — ₦100K Stock</h4>
+                <p style="color:var(--grey-600);">10x Cables, 5x Power Banks, 5x Earbuds, 3x Chargers + branded countertop display + 50 price tags + 100 warranty cards</p>
+            </div>
+            <div class="tier-card">
+                <h4>Growth Kit — ₦300K Stock</h4>
+                <p style="color:var(--grey-600);">Full range sampler + floor-standing display + 200 branded materials + demo unit + ₦20K monthly co-op advertising</p>
+            </div>
+            <div class="tier-card">
+                <h4>Premium Kit — ₦750K Stock</h4>
+                <p style="color:var(--grey-600);">Full range + early access + complete store branding + dedicated account manager + quarterly business reviews + 5% performance bonus</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="merchant">
+            <h2><span>03</span> Merchant Channel Strategy</h2>
+            <h3>Online Marketplace Presence</h3>
+            <ul class="styled-list">
+                <li>Jumia Nigeria — Official Brand Store + Jumia Express, ₦500K/month ad budget, target 500+ orders/month by Month 3</li>
+                <li>Konga Nigeria — Official Store + KongaPay integration, target 200+ orders/month by Month 3</li>
+                <li>WhatsApp Commerce — Business catalog + 50+ agent network (15% commission), target 300+ orders/month by Month 4</li>
+            </ul>
+
+            <h3>Physical Merchant Network</h3>
+            <ul class="styled-list">
+                <li>Computer Village Lagos — 3-5 anchor dealers, monthly "Mikorean Day" events, free product testing stations</li>
+                <li>Campus Merchant Network — 50 campus merchants across 8 universities by Month 3, 15% commission + bonuses</li>
+                <li>Market Trader Network — 30 traders in Computer Village, Onitsha, Wuse II by Month 2, 2-hour training sessions</li>
+            </ul>
+        </section>
+
+        <section class="content-section" id="referral">
+            <h2><span>04</span> Consumer Referral Program — "MIKOREAN Squad"</h2>
+            <p><strong>Tagline:</strong> "Share the hustle. Earn the rewards." Launch Month 2 after initial brand awareness.</p>
+
+            <h3>How It Works</h3>
+            <ul class="styled-list">
+                <li>Customer purchases any Mikorean product and receives unique referral code (QR on warranty card + digital)</li>
+                <li>Shares code with friends/family via WhatsApp, social media, word of mouth</li>
+                <li>Friend uses code at checkout (online or in-store)</li>
+                <li>Both referrer and friend earn rewards instantly</li>
+            </ul>
+
+            <h3>Reward Structure</h3>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Milestone</th><th>Referrer Reward</th><th>Friend Reward</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>First referral</td><td>₦500 store credit</td><td>10% off first order</td></tr>
+                    <tr><td>5th referral</td><td>Free cable (₦3,000 value)</td><td>15% off</td></tr>
+                    <tr><td>10th referral</td><td>Free power bank (₦12,000 value)</td><td>20% off</td></tr>
+                    <tr><td>25th referral</td><td>Free smart watch (₦25,000 value)</td><td>25% off</td></tr>
+                    <tr><td>50th referral</td><td>VIP status + ₦50K cash</td><td>30% off + free accessory</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section" id="ambassador">
+            <h2><span>05</span> Ambassador Tiers</h2>
+
+            <div class="tier-card">
+                <h4>Bronze (0-9 referrals)</h4>
+                <p style="color:var(--grey-600);">10% commission, WhatsApp group access, monthly product previews, birthday reward</p>
+            </div>
+            <div class="tier-card">
+                <h4>Silver (10-24 referrals)</h4>
+                <p style="color:var(--grey-600);">12% commission, free products for content creation, social media features, quarterly meetups</p>
+            </div>
+            <div class="tier-card">
+                <h4>Gold (25-49 referrals)</h4>
+                <p style="color:var(--grey-600);">15% commission, 3 free products quarterly, priority launch access, dedicated account manager, co-branded content</p>
+            </div>
+            <div class="tier-card">
+                <h4>Platinum (50+ referrals)</h4>
+                <p style="color:var(--grey-600);">18% commission, full product line access, revenue share, annual retreat, co-creation opportunities, brand campaign features</p>
+            </div>
+
+            <div class="callout">
+                <div class="callout-title">Anti-Fraud Measures</div>
+                <p>₦3,000 minimum order for credit, 90-day expiry, max 50 referrals/month, duplicate IP detection, manual verification for Gold+ payouts.</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="hybrid">
+            <h2><span>06</span> Hybrid Channel Integration</h2>
+            <h3>Online-to-Offline Flow</h3>
+            <ul class="styled-list">
+                <li>Customer discovers Mikorean on Instagram/TikTok/X</li>
+                <li>Checks product on website or WhatsApp catalog</li>
+                <li>Store locator shows nearest Slot / Computer Village / campus merchant</li>
+                <li>Purchases in-store or orders online with delivery</li>
+                <li>Joins referral program via QR code on packaging</li>
+            </ul>
+
+            <h3>Offline-to-Online Flow</h3>
+            <ul class="styled-list">
+                <li>Customer sees Mikorean at campus activation or market demo</li>
+                <li>Scans QR code to follow on Instagram/WhatsApp</li>
+                <li>Receives flash sale offer via WhatsApp broadcast</li>
+                <li>Purchases online with delivery</li>
+                <li>Shares referral code with friends</li>
+            </ul>
+
+            <h3>Channel Performance Targets</h3>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Channel</th><th>Month 1</th><th>Month 3</th><th>Month 6</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Jumia/Konga</td><td>100 orders</td><td>500 orders</td><td>1,500 orders</td></tr>
+                    <tr><td>WhatsApp Commerce</td><td>50 orders</td><td>300 orders</td><td>800 orders</td></tr>
+                    <tr><td>Slot/Pointek</td><td>200 units</td><td>800 units</td><td>2,000 units</td></tr>
+                    <tr><td>Campus Merchants</td><td>—</td><td>200 orders</td><td>600 orders</td></tr>
+                    <tr><td>Market Traders</td><td>150 units</td><td>500 units</td><td>1,500 units</td></tr>
+                    <tr><td>Referral Program</td><td>—</td><td>100 referrals</td><td>500 referrals</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-section" id="budget">
+            <h2><span>07</span> Budget & KPIs</h2>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Category</th><th>Month 1 (₦)</th><th>Monthly Ongoing (₦)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Retail Partner Onboarding</td><td>2,000,000</td><td>500,000</td></tr>
+                    <tr><td>Marketplace Advertising</td><td>1,500,000</td><td>800,000</td></tr>
+                    <tr><td>Referral Program Credits</td><td>—</td><td>600,000</td></tr>
+                    <tr><td>Campus Merchant Program</td><td>500,000</td><td>300,000</td></tr>
+                    <tr><td>WhatsApp Agent Network</td><td>300,000</td><td>200,000</td></tr>
+                    <tr><td>Co-op Advertising Fund</td><td>500,000</td><td>400,000</td></tr>
+                    <tr><td>Warehouse & Logistics</td><td>1,000,000</td><td>500,000</td></tr>
+                    <tr><td><strong>TOTAL</strong></td><td><strong>5,800,000</strong></td><td><strong>3,300,000</strong></td></tr>
+                </tbody>
+            </table>
+
+            <div class="callout">
+                <div class="callout-title">Month 6 Target</div>
+                <p>200+ retail partners, 12,000 units/month, 3,000 referral program members, 200 active ambassadors contributing 25% of total sales.</p>
+            </div>
+        </section>
+    </div>
+
+    <footer class="report-footer">
+        <div class="footer-nav">
+            <a href="index.html">
+                <span class="label">&larr; Back to</span>
+                <span class="title">Portfolio Overview</span>
+            </a>
+            <a href="report-competitor-analysis.html">
+                <span class="label">Next Report &rarr;</span>
+                <span class="title">Competitor Analysis</span>
+            </a>
+        </div>
+    </footer>
+
+    <div class="credit-footer">
+        <p><strong>Prepared by Henry Ofido</strong> — Brand and Marketing Strategist</p>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.from('.report-hero > *', { opacity: 0, y: 30, duration: 0.8, stagger: 0.15, delay: 0.3 });
+        gsap.from('.metric-card', { scrollTrigger: { trigger: '.metrics-grid', start: 'top 85%' }, opacity: 0, y: 20, duration: 0.6, stagger: 0.1 });
+        gsap.from('.content-section', { scrollTrigger: { trigger: '.report-content', start: 'top 80%' }, opacity: 0, y: 30, duration: 0.8, stagger: 0.2 });
+    </script>
+</body>
+</html>
